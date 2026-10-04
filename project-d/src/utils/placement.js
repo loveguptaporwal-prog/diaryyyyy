@@ -21,16 +21,28 @@ export function findFreeSpot(blocks = [], w, h, prefer = 'right') {
   const right = AREA.right - w;
   const left = AREA.left;
   const center = Math.round((AREA.left + AREA.right - w) / 2);
-  const xs = prefer === 'right' ? [right, left, center] : [left, right, center];
+  const preferredXs = prefer === 'right' ? [right, left, center] : [left, right, center];
 
+  // 1. Try preferred standard column positions
   for (let y = AREA.top; y + h <= AREA.bottom; y += LINE) {
-    for (const x of xs) {
+    for (const x of preferredXs) {
       const r = { x, y, w, h };
       if (!blocks.some((b) => !b.mainText && hit(r, b))) {
         return r;
       }
     }
   }
+
+  // 2. Scan across the full writable width in 40px steps to find any open gap
+  for (let y = AREA.top; y + h <= AREA.bottom; y += LINE * 2) {
+    for (let x = AREA.left; x + w <= AREA.right; x += 40) {
+      const r = { x, y, w, h };
+      if (!blocks.some((b) => !b.mainText && hit(r, b))) {
+        return r;
+      }
+    }
+  }
+
   return null;
 }
 

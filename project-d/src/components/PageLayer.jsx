@@ -5,6 +5,7 @@ import {
   CheckSquare,
   Square,
   Trash2,
+  ArrowLeftRight,
 } from 'lucide-react';
 import { useUI } from '../store/uiStore.js';
 import { registerPageEl } from '../utils/pageRegistry.js';
@@ -48,7 +49,7 @@ function formatDisplayDate(dateStr) {
 /**
  * AudioBlock Component
  */
-export function AudioBlock({ block, isSelected, isWrite, onSelect, onDelete }) {
+export function AudioBlock({ block, isSelected, isWrite, onSelect, onDelete, onMoveToOtherPage }) {
   const mediaId = block.data?.mediaId || block.mediaId || block.audioAssetId;
   const directUrl = block.data?.src || block.audioSrc || block.url;
   const { url: mediaUrl } = useMediaUrl(mediaId, directUrl);
@@ -57,52 +58,71 @@ export function AudioBlock({ block, isSelected, isWrite, onSelect, onDelete }) {
   const height = block.h || block.height || 90;
 
   return (
-    <div
-      style={{
-        width,
-        height,
-        padding: '10px 14px',
-        background: '#fffcf7',
-        borderRadius: 8,
-        boxShadow: '0 4px 16px rgba(35,20,15,0.18)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 6,
-        boxSizing: 'border-box',
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect(block.id);
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, font: "italic 14px 'Cormorant Garamond', Georgia, serif", color: '#55413c' }}>
-        <Mic size={16} /> <span>{block.title || 'Audio memory'}</span>
-        {isWrite && isSelected && (
+    <>
+      <div
+        style={{
+          width,
+          height,
+          padding: '10px 14px',
+          background: '#fffcf7',
+          borderRadius: 8,
+          boxShadow: '0 4px 16px rgba(35,20,15,0.18)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 6,
+          boxSizing: 'border-box',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(block.id);
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, font: "italic 14px 'Cormorant Garamond', Georgia, serif", color: '#55413c' }}>
+          <Mic size={16} /> <span>{block.title || 'Audio memory'}</span>
+        </div>
+        {displayUrl ? (
+          <audio controls src={displayUrl} style={{ width: '100%', height: 32 }} />
+        ) : (
+          <span style={{ fontSize: 12, color: '#998' }}>Audio recording</span>
+        )}
+      </div>
+
+      {isWrite && isSelected && (
+        <div data-no-drag className="media-mini-bar" onPointerDown={(e) => e.stopPropagation()}>
+          {onMoveToOtherPage && (
+            <button
+              type="button"
+              className="media-mini-btn"
+              title="Move to opposite page"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveToOtherPage(block);
+              }}
+            >
+              <ArrowLeftRight size={16} /> Move Page
+            </button>
+          )}
           <button
-            data-no-drag
-            style={{ marginLeft: 'auto', border: 0, background: 'transparent', cursor: 'pointer', color: '#b5566a' }}
+            type="button"
+            className="media-mini-btn danger"
+            title="Delete Audio"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(block.id);
             }}
           >
-            <Trash2 size={14} />
+            <Trash2 size={16} />
           </button>
-        )}
-      </div>
-      {displayUrl ? (
-        <audio controls src={displayUrl} style={{ width: '100%', height: 32 }} />
-      ) : (
-        <span style={{ fontSize: 12, color: '#998' }}>Audio recording</span>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
 /**
  * ChecklistBlock Component
  */
-export function ChecklistBlock({ block, isSelected, isWrite, readOnly = false, onSelect, onChange, onDelete }) {
+export function ChecklistBlock({ block, isSelected, isWrite, readOnly = false, onSelect, onChange, onDelete, onMoveToOtherPage }) {
   const x = block.x ?? MARGIN_X;
   const y = block.y ?? GRID_TOP;
   const width = block.width || (PAGE_W - MARGIN_X * 2);
@@ -128,19 +148,43 @@ export function ChecklistBlock({ block, isSelected, isWrite, readOnly = false, o
     <div
       className={`interactive-block ${isWrite ? 'is-write' : ''} ${isSelected ? 'is-selected' : ''}`}
       style={{
-        position: 'absolute',
-        left: x,
-        top: y + BASELINE_NUDGE,
-        width,
+        width: '100%',
         padding: '2px 4px',
         boxSizing: 'border-box',
-        zIndex: isSelected ? 15 : 3,
       }}
       onClick={(e) => {
         e.stopPropagation();
         onSelect(block.id);
       }}
     >
+      {isWrite && isSelected && (
+        <div data-no-drag className="media-mini-bar" onPointerDown={(e) => e.stopPropagation()}>
+          {onMoveToOtherPage && (
+            <button
+              type="button"
+              className="media-mini-btn"
+              title="Move to opposite page"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveToOtherPage(block);
+              }}
+            >
+              <ArrowLeftRight size={16} /> Move Page
+            </button>
+          )}
+          <button
+            type="button"
+            className="media-mini-btn danger"
+            title="Delete Checklist"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(block.id);
+            }}
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      )}
       {items.map((item) => (
         <div
           key={item.id}
@@ -225,6 +269,7 @@ export function ChecklistBlock({ block, isSelected, isWrite, readOnly = false, o
  */
 export default function PageLayer({
   page,
+  oppositePage,
   side,
   mode,
   readOnly = false,
@@ -303,9 +348,26 @@ export default function PageLayer({
     onBlockChange(pageId, blockId, { z: maxZ + 1 });
   };
 
-  // Move block to opposite spread page
+  // Move block to opposite spread page (LEFT <-> RIGHT)
   const handleMoveToOtherPage = (block) => {
-    const otherPage = pages.find((p) => p.id !== page.id && p.kind === 'memory');
+    // 1. Resolve opposite page on the current physical two-page spread
+    let otherPage = oppositePage;
+
+    if (!otherPage || otherPage.id === page.id) {
+      const currentIdx = pages.findIndex((p) => p.id === page.id);
+      if (currentIdx !== -1) {
+        const oppositeIdx = side === 'left' ? currentIdx + 1 : currentIdx - 1;
+        if (oppositeIdx >= 0 && oppositeIdx < pages.length) {
+          otherPage = pages[oppositeIdx];
+        }
+      }
+    }
+
+    // Fallback if not found by index
+    if (!otherPage || otherPage.kind !== 'memory') {
+      otherPage = pages.find((p) => p.id !== page.id && p.kind === 'memory');
+    }
+
     if (!otherPage) {
       showToast('No opposite page available');
       return;
@@ -313,19 +375,40 @@ export default function PageLayer({
 
     const bw = block.w || block.width || 300;
     const bh = block.h || block.height || 230;
-    const spot = findFreeSpot(otherPage.blocks || [], bw, bh) || { x: MARGIN_X, y: GRID_TOP };
+    const targetX = block.x ?? MARGIN_X;
+    const targetY = block.y ?? (block.top || GRID_TOP);
+
+    // Keep page-local position, clamped to writable destination page area
+    const clamped = clampToPage({
+      ...block,
+      x: targetX,
+      y: targetY,
+      w: bw,
+      h: bh,
+      width: bw,
+      height: bh,
+    });
+
+    // If moving a mainText block to a page that already has one, convert to a movable text block
+    const destinationHasMainText = (otherPage.blocks || []).some(
+      (b) => b.mainText && b.id !== block.id
+    );
+
+    const finalBlock = {
+      ...block,
+      x: clamped.x,
+      y: clamped.y,
+      w: bw,
+      h: bh,
+      width: bw,
+      height: bh,
+      ...(block.mainText && destinationHasMainText ? { mainText: false } : {}),
+    };
 
     if (onMoveBlockToPage) {
-      onMoveBlockToPage(page.id, otherPage.id, block.id, {
-        ...block,
-        x: spot.x,
-        y: spot.y,
-        w: bw,
-        h: bh,
-        width: bw,
-        height: bh,
-      });
-      showToast(`Moved to page`);
+      onMoveBlockToPage(page.id, otherPage.id, block.id, finalBlock);
+      const destPageNum = pages.findIndex((p) => p.id === otherPage.id) + 1;
+      showToast(destPageNum > 0 ? `Moved to page ${String(destPageNum).padStart(2, '0')}` : 'Moved to page');
     }
   };
 
@@ -564,6 +647,7 @@ export default function PageLayer({
                 onSelect={setSelectedBlock}
                 onChange={(id, changes) => onBlockChange(page.id, id, changes)}
                 onDelete={(id) => onBlockDelete(page.id, id)}
+                onMoveToOtherPage={handleMoveToOtherPage}
               />
             );
 
@@ -641,21 +725,36 @@ export default function PageLayer({
                   isWrite={isWrite}
                   onSelect={setSelectedBlock}
                   onDelete={(id) => onBlockDelete(page.id, id)}
+                  onMoveToOtherPage={handleMoveToOtherPage}
                 />
               </BlockFrame>
             );
 
           case 'checklist':
             return (
-              <ChecklistBlock
+              <BlockFrame
                 key={block.id}
                 block={block}
-                isSelected={isSelected}
-                isWrite={isWrite}
+                pageId={page.id}
+                isWriteMode={isWrite}
+                selected={isSelected}
                 onSelect={setSelectedBlock}
-                onChange={(id, changes) => onBlockChange(page.id, id, changes)}
-                onDelete={(id) => onBlockDelete(page.id, id)}
-              />
+                onBlockChange={onBlockChange}
+                onMoveToPage={onMoveBlockToPage}
+                onBringToFront={handleBringToFront}
+                keepRatio={false}
+              >
+                <ChecklistBlock
+                  block={block}
+                  isSelected={isSelected}
+                  isWrite={isWrite}
+                  readOnly={readOnly}
+                  onSelect={setSelectedBlock}
+                  onChange={(id, changes) => onBlockChange(page.id, id, changes)}
+                  onDelete={(id) => onBlockDelete(page.id, id)}
+                  onMoveToOtherPage={handleMoveToOtherPage}
+                />
+              </BlockFrame>
             );
 
           default:

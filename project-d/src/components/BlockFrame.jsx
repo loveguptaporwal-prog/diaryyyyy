@@ -127,6 +127,7 @@ export default function BlockFrame({
         };
         const clamped = clampToPage(next);
         onMoveToPage(pageId, target.id, block.id, {
+          ...block,
           ...clamped,
           width: clamped.w,
           height: clamped.h,

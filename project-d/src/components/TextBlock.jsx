@@ -6,8 +6,9 @@ import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
-import { GripVertical } from 'lucide-react';
+import { GripVertical, ArrowLeftRight, Trash2 } from 'lucide-react';
 import { useUI } from '../store/uiStore.js';
+import { pageAtPoint } from '../utils/pageRegistry.js';
 import { GRID_TOP, LINE, LINE_COUNT, BASELINE_NUDGE, BODY_SIZE, PAGE_W, MARGIN_X } from '../constants/pageLayout.js';
 import { ParagraphSize, SIZES } from '../editor/ParagraphSize.js';
 
@@ -29,6 +30,7 @@ export default function TextBlock({
   onSelect,
   onChange,
   onDelete,
+  onMoveToOtherPage,
 }) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -145,9 +147,14 @@ export default function TextBlock({
       });
     };
 
-    const onPointerUp = () => {
+    const onPointerUp = (ue) => {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+
+      const target = pageAtPoint(ue.clientX, ue.clientY);
+      if (target && target.id !== pageId && onMoveToOtherPage) {
+        onMoveToOtherPage(block);
+      }
     };
 
     window.addEventListener('pointermove', onPointerMove);
@@ -203,6 +210,37 @@ export default function TextBlock({
           .run();
       }}
     >
+      {isWrite && (isSelected || (!block.mainText && isFocused)) && (
+        <div data-no-drag className="media-mini-bar" onPointerDown={(e) => e.stopPropagation()}>
+          {onMoveToOtherPage && (
+            <button
+              type="button"
+              className="media-mini-btn"
+              title="Move to opposite page"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveToOtherPage(block);
+              }}
+            >
+              <ArrowLeftRight size={16} /> Move Page
+            </button>
+          )}
+          {!block.mainText && (
+            <button
+              type="button"
+              className="media-mini-btn danger"
+              title="Delete text block"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(block.id);
+              }}
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
+        </div>
+      )}
+
       {isWrite && !block.mainText && (isSelected || isFocused) && (
         <div
           className="text-block-grip"

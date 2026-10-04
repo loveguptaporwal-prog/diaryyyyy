@@ -2438,7 +2438,11 @@ export default function App() {
     }
     const id = crypto.randomUUID();
     if (type === "text") {
-      const spot = findFreeSpot(target.blocks || [], 360, LINE * 3) || { x: MARGIN_X, y: GRID_TOP };
+      const textCount = (target.blocks || []).filter((b) => b.type === 'text' && !b.mainText).length;
+      const spot = findFreeSpot(target.blocks || [], 360, LINE * 3) || {
+        x: MARGIN_X + ((textCount * 24) % 180),
+        y: GRID_TOP + ((textCount * LINE * 2) % 360),
+      };
       const snappedY = GRID_TOP + Math.round((spot.y - GRID_TOP) / LINE) * LINE;
       const block = {
         id,
@@ -2459,7 +2463,11 @@ export default function App() {
       return;
     }
     if (type === "checklist") {
-      const spot = findFreeSpot(target.blocks || [], 450, 140) || { x: MARGIN_X, y: GRID_TOP };
+      const checklistCount = (target.blocks || []).filter((b) => b.type === 'checklist').length;
+      const spot = findFreeSpot(target.blocks || [], 450, 140) || {
+        x: MARGIN_X + ((checklistCount * 24) % 150),
+        y: GRID_TOP + ((checklistCount * LINE * 3) % 360),
+      };
       const snappedY = GRID_TOP + Math.round((spot.y - GRID_TOP) / LINE) * LINE;
       const block = {
         id,
@@ -2475,7 +2483,11 @@ export default function App() {
       return;
     }
     if (type === "video") {
-      const spot = findFreeSpot(target.blocks || [], 340, 240) || { x: MARGIN_X, y: GRID_TOP };
+      const videoCount = (target.blocks || []).filter((b) => b.type === 'video').length;
+      const spot = findFreeSpot(target.blocks || [], 340, 240) || {
+        x: MARGIN_X + ((videoCount * 32) % 200),
+        y: GRID_TOP + ((videoCount * 36) % 300),
+      };
       const block = {
         id,
         type: 'video',
@@ -2659,6 +2671,10 @@ export default function App() {
 
   const moveBlockToPage = (fromPageId, toPageId, blockId, clampedBlock) => {
     setPages((allPages) => {
+      const fromPage = allPages.find((p) => p.id === fromPageId);
+      const originalBlock = fromPage?.blocks?.find((b) => b.id === blockId);
+      if (!originalBlock) return allPages;
+
       return allPages.map((page) => {
         if (page.id === fromPageId) {
           const filtered = (page.blocks || []).filter((b) => b.id !== blockId);
@@ -2667,7 +2683,8 @@ export default function App() {
         if (page.id === toPageId) {
           const maxZ = Math.max(1, ...(page.blocks || []).map((b) => b.z || 1));
           const movedBlock = {
-            ...clampedBlock,
+            ...originalBlock,
+            ...(clampedBlock || {}),
             id: blockId,
             z: maxZ + 1,
           };
@@ -2678,6 +2695,7 @@ export default function App() {
       });
     });
     setSelectedBlock(blockId);
+    useUI.getState().setSelectedBlock(blockId);
   };
 
   const handleAddMedia = async (targetPageId, kind, file) => {
@@ -2762,34 +2780,16 @@ export default function App() {
       spot = findFreeSpot(targetPage.blocks || [], chosenW, chosenH);
     }
 
-    // 4. Try opposite page of the current spread
-    const otherSpreadPage = targetPage.id === leftPage?.id ? rightPage : leftPage;
-    if (!spot && otherSpreadPage && otherSpreadPage.kind === 'memory') {
-      chosenW = baseW;
-      chosenH = baseH;
-      spot = findFreeSpot(otherSpreadPage.blocks || [], chosenW, chosenH);
-      if (!spot) {
-        chosenW = Math.round(baseW * 0.75);
-        chosenH = Math.round(baseH * 0.75);
-        spot = findFreeSpot(otherSpreadPage.blocks || [], chosenW, chosenH);
-      }
-      if (spot) {
-        targetPage = otherSpreadPage;
-        const pageIdx = pagesRef.current.findIndex((p) => p.id === targetPage.id) + 1;
-        showToast(`Page is full — added to page ${String(pageIdx).padStart(2, '0')}`);
-      }
-    }
-
-    // 5. If still null, create next page
+    // If no open grid spot was found, place directly on targetPage with a cascade offset
+    // Completely remove artificial page-capacity limits: pages can hold any number of items
     if (!spot) {
-      const newPage = makeMemoryPage();
-      setPages(all => [...all, newPage]);
-      targetPage = newPage;
       chosenW = baseW;
       chosenH = baseH;
-      spot = { x: 84, y: 260 };
-      const pageIdx = pagesRef.current.length;
-      showToast(`Spread is full — added to page ${String(pageIdx).padStart(2, '0')}`);
+      const nonMainBlocks = (targetPage.blocks || []).filter((b) => !b.mainText);
+      const count = nonMainBlocks.length;
+      const cascadeX = MARGIN_X + ((count * 32) % Math.max(40, (PAGE_W - MARGIN_X * 2 - chosenW)));
+      const cascadeY = GRID_TOP + ((count * 36) % Math.max(40, (GRID_BOTTOM - GRID_TOP - chosenH)));
+      spot = { x: cascadeX, y: cascadeY };
     }
 
     try {

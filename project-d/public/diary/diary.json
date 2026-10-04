@@ -1,18 +1,17 @@
 {
   "schemaVersion": "1.0.0",
   "version": 1,
-  "exportedAt": "2026-10-04T11:56:20.125Z",
+  "exportedAt": "2026-10-04T16:24:25.826Z",
   "pages": [
     {
       "id": "ownership",
       "kind": "ownership",
       "title": "This Diary Belongs To",
       "fields": {
-        "name": "Eleanor Vance",
+        "name": "Sneha",
         "introduction": "",
         "photo": ""
       },
-      "revision": 26,
       "data": {
         "profilePhoto": {
           "focusX": 50,
@@ -21,9 +20,10 @@
           "src": "/diary/media/a624febb3418ae9a.jpeg"
         }
       },
+      "revision": 13,
       "blocks": [
         {
-          "id": "0670f72d-57c1-4508-954d-98c10df2956b",
+          "id": "8e676119-a5b7-4acd-a213-a614f67022c8",
           "type": "text",
           "x": 132,
           "y": 132,
@@ -40,24 +40,38 @@
       "kind": "profile",
       "title": "My Profile",
       "fields": {
-        "name": "",
-        "nickname": "",
-        "birthday": "",
-        "flower": "",
-        "place": "",
-        "song": "",
-        "food": "",
-        "loves": "",
+        "name": "sneha",
+        "nickname": "Khargoosh",
+        "birthday": "4 october ",
+        "flower": "Gulaab",
+        "place": "Home",
+        "song": "Rinki ke papa",
+        "food": "Pea(matter)",
+        "loves": "Eating",
         "happy": "",
         "other": ""
       },
+      "revision": 136,
       "blocks": []
     },
     {
       "id": "index",
       "kind": "index",
       "title": "My Chapters / Index",
-      "blocks": []
+      "blocks": [
+        {
+          "id": "03cb2401-7441-4b03-9409-b6536a43afed",
+          "type": "text",
+          "x": 132,
+          "y": 132,
+          "width": 604,
+          "height": 110,
+          "text": "",
+          "fontSize": 24,
+          "style": "body"
+        }
+      ],
+      "revision": 1
     },
     {
       "id": "dates",
@@ -67,45 +81,15 @@
       "blocks": []
     },
     {
-      "id": "memory-8be388b4-2a24-42af-9e1a-e0e0e386228c",
+      "id": "memory-21d05468-0bb1-4f71-9194-d3f5ad3567d8-8281",
       "kind": "memory",
-      "title": "",
-      "date": "2026-10-02",
+      "title": "Happy Birthday Sneha",
+      "date": "2026-10-04",
       "mood": "",
-      "variation": 3,
+      "variation": 1,
       "blocks": [
         {
-          "id": "77578970-e6b5-4ec7-aa16-aa1dd402a955",
-          "type": "text",
-          "text": "hllow i am abhay gupta\n\nThis is a test entry on Page 5.\n\nToday the petals drifted gently, g Adding more edits live!athering by the window.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "style": "body",
-          "fontSize": 19,
-          "bold": false,
-          "italic": false,
-          "underline": false,
-          "align": "left",
-          "lineSpacing": 1.55,
-          "mainText": true,
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">hllow i am abhay gupta</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">This is a test entry on Page 5.</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">Today the petals drifted gently, g Adding more edits live!athering by the window.</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
-        }
-      ],
-      "revision": 314
-    },
-    {
-      "id": "memory-79719566-4c70-4b81-952d-6bc4f7772378",
-      "kind": "memory",
-      "title": "My First Memory",
-      "date": "2026-10-02",
-      "mood": "",
-      "variation": 4,
-      "blocks": [
-        {
-          "id": "main-memory-79719566-4c70-4b81-952d-6bc4f7772378",
+          "id": "main-memory-ed467aea-9fb7-495a-856c-d7df11a8549b-7120",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -114,69 +98,59 @@
           "width": 672,
           "height": 880,
           "fontSize": 26,
-          "text": "\n\n\n\n\n\n\n\n\n\n\n\n",
-          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
+          "text": "Helloooo🫡.... Hi sneha, kaisi hai\n\nand sorry fot late haa..happy\n\nbirthday re 🎂🎂many many\n\ncongratulations and happy\n\nbirthday 🎂 🎈 to u thoda late\n\nho gya Birthday wish karne me\n\nyaad the obvisouly bhoola nhi tha\n\nkhair i hope badhiya chal rha ho\n\nsab status dekhne se to yahi lagta h chal to theek hi rha h baad baki u better know and maaf kijiyega jitne photos thi aur video mil pai bo hi use kiya hu.. and waise isme tumhe sab kuch mil jayega ...ya usse jyada hi...\n\n\n\n                                                          Sabse pahle to gussa to mat                             hi                                                       hi hona and obviously I will                                                                            kept                                                   kept my promise aaj hi h jo last time                                                   bola tha abb nhi karunga aunga                                                 kabhi  tension not 👍🏻 ....\n\n                                                           But happy birthday 12 baje to\n\n                                                           wish nhi kar paya bura laga \n\n                                                           complete kar rha tha sab\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">Helloooo🫡.... Hi sneha, kaisi hai</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">and sorry fot late haa..happy</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">birthday re 🎂🎂many many</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">congratulations and happy</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">birthday 🎂 🎈 to u thoda late</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">ho gya Birthday wish karne me</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">yaad the obvisouly bhoola nhi tha</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">khair i hope badhiya chal rha ho</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">sab status dekhne se to yahi lagta h chal to theek hi rha h baad baki u better know and maaf kijiyega jitne photos thi aur video mil pai bo hi use kiya hu.. and waise isme tumhe sab kuch mil jayega ...ya usse jyada hi...</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">                                                          Sabse pahle to gussa to mat                             hi                                                       hi hona and obviously I will                                                                            kept                                                   kept my promise aaj hi h jo last time                                                   bola tha abb nhi karunga aunga                                                 kabhi  tension not 👍🏻 ....</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">                                                           But happy birthday 12 baje to</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">                                                           wish nhi kar paya bura laga </p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">                                                           complete kar rha tha sab</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>",
+          "w": 672,
+          "h": 880,
+          "z": 2
         },
         {
-          "id": "365dcb46-996a-455e-82be-25452ee886fc",
+          "id": "c085ae80-b9e1-458c-adb3-8cb2c9f592f6",
           "type": "photo",
-          "x": 496,
+          "x": 416,
           "y": 132,
-          "w": 240,
-          "h": 380,
-          "width": 240,
-          "height": 380,
-          "rotation": -1.7,
+          "w": 320,
+          "h": 320,
+          "width": 320,
+          "height": 320,
+          "rotation": 0.7,
           "caption": "",
-          "z": 2,
+          "z": 11,
           "data": {
             "placement": "free",
-            "src": "/diary/media/2709c6e053de1ba0.jpeg"
+            "src": "/diary/media/b14dce7bd7bc9664.png"
+          }
+        },
+        {
+          "id": "d6ebcb52-abed-4ecb-b996-d7a263591889",
+          "type": "video",
+          "x": 64,
+          "y": 645,
+          "w": 340,
+          "h": 360,
+          "width": 340,
+          "height": 360,
+          "rotation": 0,
+          "caption": "",
+          "z": 15,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/6790ba780ef1b3c6.mp4"
           }
         }
       ],
-      "revision": 39
+      "revision": 1023
     },
     {
-      "id": "memory-e186be35-a9e4-4b22-893e-cfb39fb2b324",
+      "id": "memory-ed467aea-9fb7-495a-856c-d7df11a8549b-7120",
       "kind": "memory",
       "title": "",
-      "date": "2026-10-02",
+      "date": "2026-10-04",
       "mood": "",
-      "variation": 0,
+      "variation": 2,
       "blocks": [
         {
-          "id": "03200ead-19a1-4ff0-be52-d1786b86c490",
-          "type": "text",
-          "text": "This afternoon by the cherry blos - edited live test!soms was pure magic.",
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "style": "body",
-          "fontSize": 19,
-          "bold": false,
-          "italic": false,
-          "underline": false,
-          "align": "left",
-          "lineSpacing": 1.55,
-          "mainText": true,
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">This afternoon by the cherry blos - edited live test!soms was pure magic.</p>"
-        }
-      ],
-      "revision": 86
-    },
-    {
-      "id": "memory-195ba8d8-2a1a-47de-9901-9c8a4e04d74c-5980",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-02",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-195ba8d8-2a1a-47de-9901-9c8a4e04d74c-5980",
+          "id": "main-memory-ed467aea-9fb7-495a-856c-d7df11a8549b-7120",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -185,22 +159,39 @@
           "width": 672,
           "height": 880,
           "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+          "text": "Mai bass tumse baat karna \n\nchahta tha  par tum karti nhi\n\nabb bo theek h to maine socha\n\nmai hi baat karu kuch batau  \n\naange kabhi milega nhi mauka ...\n\n\n\nAgar koi mistake vagera ho \n\nlikhne me to  ignore kar dena \n\nplz ....time lag jata h likhne me\n\naur ye sab prepare karne me actually mai chahta to samne batana ya baat karna par kaha hi kar paye .....aur secondly maine socha video bana lu to bo bhi nhi kar paya ..... To socha yahi jo karta hu vahi theek rahega ....🫡pata bhi nhi ki yaha par ho padh rhi ho ya nhi but agar padh rhi to continue continue..aram se padho jaise jaise time mile...\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p>Mai bass tumse baat karna </p><p>chahta tha  par tum karti nhi</p><p>abb bo theek h to maine socha</p><p>mai hi baat karu kuch batau  </p><p>aange kabhi milega nhi mauka ...</p><p></p><p>Agar koi mistake vagera ho </p><p>likhne me to  ignore kar dena </p><p>plz ....time lag jata h likhne me</p><p>aur ye sab prepare karne me actually mai chahta to samne batana ya baat karna par kaha hi kar paye .....aur secondly maine socha video bana lu to bo bhi nhi kar paya ..... To socha yahi jo karta hu vahi theek rahega ....🫡pata bhi nhi ki yaha par ho padh rhi ho ya nhi but agar padh rhi to continue continue..aram se padho jaise jaise time mile...</p><p></p><p></p><p></p><p></p><p></p><p></p>"
+        },
+        {
+          "id": "868c3c01-a1c9-4eb6-ac02-c8cc9d3f51ce",
+          "type": "video",
+          "x": 378,
+          "y": 132,
+          "w": 340,
+          "h": 360,
+          "width": 340,
+          "height": 360,
+          "rotation": 0,
+          "caption": "",
+          "z": 14,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/9f30f20ff56ab16d.mp4"
+          }
         }
       ],
-      "revision": 8
+      "revision": 621
     },
     {
-      "id": "memory-f600ce2f-b07b-4cbf-b888-1efd6c21b1ca-3397",
+      "id": "memory-428f7530-a9e4-4222-8ea1-5e6ca9300147-9492",
       "kind": "memory",
       "title": "",
-      "date": "2026-10-03",
+      "date": "2026-10-04",
       "mood": "",
-      "variation": 4,
+      "variation": 3,
       "blocks": [
         {
-          "id": "main-memory-f600ce2f-b07b-4cbf-b888-1efd6c21b1ca-3397",
+          "id": "main-memory-428f7530-a9e4-4222-8ea1-5e6ca9300147-9492",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -216,15 +207,15 @@
       "revision": 2
     },
     {
-      "id": "memory-b818e723-d74b-459e-9ff8-874c221e4366-6776",
+      "id": "memory-9da4aacc-7e06-4aca-ad7b-43d5db616101-9980",
       "kind": "memory",
       "title": "",
-      "date": "2026-10-03",
+      "date": "2026-10-04",
       "mood": "",
-      "variation": 0,
+      "variation": 4,
       "blocks": [
         {
-          "id": "main-memory-b818e723-d74b-459e-9ff8-874c221e4366-6776",
+          "id": "main-memory-9da4aacc-7e06-4aca-ad7b-43d5db616101-9980",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -238,443 +229,6 @@
         }
       ],
       "revision": 2
-    },
-    {
-      "id": "memory-f9fba42b-f611-4d61-ab07-dc0dd4dfd13a-479",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-f9fba42b-f611-4d61-ab07-dc0dd4dfd13a-479",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-65af6090-ac84-47d3-8a53-4f07bb802529-1364",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-65af6090-ac84-47d3-8a53-4f07bb802529-1364",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-904dd5c3-f795-43c3-bf94-84d9bbcf1898-1917",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-904dd5c3-f795-43c3-bf94-84d9bbcf1898-1917",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-2f431069-4dfc-486a-9ddd-2cfeab8bce70-7643",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 4,
-      "blocks": [
-        {
-          "id": "main-memory-2f431069-4dfc-486a-9ddd-2cfeab8bce70-7643",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-21211531-a3ff-4771-bf36-4478a405c00f-8366",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 0,
-      "blocks": [
-        {
-          "id": "main-memory-21211531-a3ff-4771-bf36-4478a405c00f-8366",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-d0f2dcbd-73a2-40bc-a6ba-59bc99c0daca-7216",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-d0f2dcbd-73a2-40bc-a6ba-59bc99c0daca-7216",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-35854b5b-1ae1-41f3-ab2d-7b2d00eba636-3291",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-35854b5b-1ae1-41f3-ab2d-7b2d00eba636-3291",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-0b33f1e6-2472-4bc7-a73f-edcdf0c01855-257",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-0b33f1e6-2472-4bc7-a73f-edcdf0c01855-257",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-e461447e-526c-41a3-b0c2-a09f68f56076-4544",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 4,
-      "blocks": [
-        {
-          "id": "main-memory-e461447e-526c-41a3-b0c2-a09f68f56076-4544",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-d20f153e-a720-48fc-acb1-d40e21639cbb-8901",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 0,
-      "blocks": [
-        {
-          "id": "main-memory-d20f153e-a720-48fc-acb1-d40e21639cbb-8901",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-66483dd3-97bf-4645-b4c9-318a2523a275-7380",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-66483dd3-97bf-4645-b4c9-318a2523a275-7380",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-133747f9-0b47-453a-8d59-5b7dc301aa90-4989",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-133747f9-0b47-453a-8d59-5b7dc301aa90-4989",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-c6d17df8-0a5d-4c80-8f55-8569c3bfa9e5-1807",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-c6d17df8-0a5d-4c80-8f55-8569c3bfa9e5-1807",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-e92dd8b1-7006-43d2-a80c-ab6c1fc17be2-1780",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 4,
-      "blocks": [
-        {
-          "id": "main-memory-e92dd8b1-7006-43d2-a80c-ab6c1fc17be2-1780",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-51a70c21-f1f5-46af-84fd-624ebb4b5f77-6666",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 0,
-      "blocks": [
-        {
-          "id": "main-memory-51a70c21-f1f5-46af-84fd-624ebb4b5f77-6666",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-b3c954c3-52ce-4a43-a9da-e9dfaa500a28-3887",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-b3c954c3-52ce-4a43-a9da-e9dfaa500a28-3887",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-4f247f3f-9bbd-4d88-8dec-5da35cde24d4-3990",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-4f247f3f-9bbd-4d88-8dec-5da35cde24d4-3990",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-de0858f4-0f3a-4003-8bef-7e6f426ba3aa-687",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-de0858f4-0f3a-4003-8bef-7e6f426ba3aa-687",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
-    },
-    {
-      "id": "memory-be894d24-8876-446d-b163-ed49b845c2b0-9527",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 4,
-      "blocks": [
-        {
-          "id": "main-memory-be894d24-8876-446d-b163-ed49b845c2b0-9527",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p></p>"
-        }
-      ]
     }
   ],
   "inkColor": "#5a3a31"

@@ -53,6 +53,7 @@ export default function DiaryOverlay({
         >
           <PageLayer
             page={leftPage}
+            oppositePage={rightPage}
             side="left"
             mode={mode}
             readOnly={readOnly}
@@ -86,6 +87,7 @@ export default function DiaryOverlay({
         >
           <PageLayer
             page={rightPage}
+            oppositePage={leftPage}
             side="right"
             mode={mode}
             readOnly={readOnly}

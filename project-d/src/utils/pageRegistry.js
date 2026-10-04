@@ -10,6 +10,7 @@ export function registerPageEl(id, el) {
 }
 
 export function pageAtPoint(clientX, clientY) {
+  // 1. Direct bounding rect hit
   for (const [id, el] of pageEls.entries()) {
     if (!el || !document.body.contains(el)) continue;
     const rect = el.getBoundingClientRect();
@@ -22,5 +23,21 @@ export function pageAtPoint(clientX, clientY) {
       return { id, el };
     }
   }
-  return null;
+
+  // 2. Proximity check for gutter and margins between pages
+  let closest = null;
+  let minDistance = Infinity;
+  for (const [id, el] of pageEls.entries()) {
+    if (!el || !document.body.contains(el)) continue;
+    const rect = el.getBoundingClientRect();
+    const dx = Math.max(0, rect.left - clientX, clientX - rect.right);
+    const dy = Math.max(0, rect.top - clientY, clientY - rect.bottom);
+    const dist = Math.hypot(dx, dy);
+    if (dist < minDistance && dist < 200) {
+      minDistance = dist;
+      closest = { id, el };
+    }
+  }
+
+  return closest;
 }

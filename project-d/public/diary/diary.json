@@ -1,0 +1,668 @@
+{
+  "version": 1,
+  "exportedAt": "2026-10-03T17:33:59.323Z",
+  "pages": [
+    {
+      "id": "ownership",
+      "kind": "ownership",
+      "title": "This Diary Belongs To",
+      "fields": {
+        "name": "ABHAY GUPTA",
+        "introduction": "",
+        "photo": ""
+      },
+      "revision": 33,
+      "data": {
+        "profilePhoto": {
+          "focusX": 50,
+          "focusY": 50,
+          "zoom": 1,
+          "src": "/diary/media/104abb6aff924cc9.jpeg"
+        }
+      },
+      "blocks": []
+    },
+    {
+      "id": "profile",
+      "kind": "profile",
+      "title": "My Profile",
+      "fields": {
+        "name": "ABHAY GUPTA ",
+        "nickname": "",
+        "birthday": "",
+        "flower": "",
+        "place": "",
+        "song": "",
+        "food": "",
+        "loves": "",
+        "happy": "",
+        "other": ""
+      },
+      "revision": 26,
+      "blocks": []
+    },
+    {
+      "id": "index",
+      "kind": "index",
+      "title": "My Chapters / Index",
+      "blocks": []
+    },
+    {
+      "id": "dates",
+      "kind": "dates",
+      "title": "Important Dates",
+      "dates": [],
+      "blocks": []
+    },
+    {
+      "id": "memory-ee45f0b7-c64f-4922-a6b1-3defa763cbc4-6626",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-ee45f0b7-c64f-4922-a6b1-3defa763cbc4-6626",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "does it is on render\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">does it is on render</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p></p><p></p><p></p>"
+        },
+        {
+          "id": "c23cf592-a580-4e0b-a826-ce2a3a95c023",
+          "type": "photo",
+          "x": 416,
+          "y": 134,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": -2.5,
+          "caption": "",
+          "z": 14,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        },
+        {
+          "id": "d816bff9-b28b-48c4-a2dc-66b651893ceb",
+          "type": "photo",
+          "x": 134,
+          "y": 132,
+          "w": 240,
+          "h": 380,
+          "width": 240,
+          "height": 380,
+          "rotation": -2.5,
+          "caption": "",
+          "z": 15,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/104abb6aff924cc9.jpeg"
+          }
+        },
+        {
+          "id": "18d3ed75-900a-4e44-a775-93b82d39e03b",
+          "type": "photo",
+          "x": 416,
+          "y": 341,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": -2.6,
+          "caption": "",
+          "z": 16,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/795a9449672a57a1.png"
+          }
+        },
+        {
+          "x": 64,
+          "y": 794,
+          "w": 320,
+          "h": 180,
+          "rotation": -1.1,
+          "width": 320,
+          "height": 180,
+          "id": "868c0404-ace6-4011-9f87-2f90d1a56a7f",
+          "z": 12
+        },
+        {
+          "id": "33204ddc-b89b-4e1b-81b1-e732dfde0a32",
+          "type": "photo",
+          "x": 64,
+          "y": 532,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": 2.4,
+          "caption": "",
+          "z": 17,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        }
+      ],
+      "revision": 94
+    },
+    {
+      "id": "memory-4300da81-98e3-462d-8bfc-9db10ebfaeb5-912",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 2,
+      "blocks": [
+        {
+          "id": "main-memory-4300da81-98e3-462d-8bfc-9db10ebfaeb5-912",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
+        },
+        {
+          "id": "ca2e6f88-6841-4098-a9db-208a83afb269",
+          "type": "photo",
+          "x": 401,
+          "y": 166,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": -2.2,
+          "caption": "",
+          "z": 3,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        },
+        {
+          "id": "0ad99d75-86d3-42f1-a802-7c2fa6eaa067",
+          "type": "photo",
+          "x": 64,
+          "y": 171,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": 1.6,
+          "caption": "",
+          "z": 5,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        },
+        {
+          "id": "d905d47f-26a0-446a-98da-70f24ff2d834",
+          "type": "photo",
+          "x": 416,
+          "y": 372,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": 2.8,
+          "caption": "",
+          "z": 6,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        },
+        {
+          "id": "57368c25-91f1-4df7-8022-b9feeefac2fd",
+          "type": "photo",
+          "x": 64,
+          "y": 372,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": 1.8,
+          "caption": "",
+          "z": 7,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        },
+        {
+          "id": "974d54c6-db21-4ad5-874c-17e5c7c31f10",
+          "type": "photo",
+          "x": 416,
+          "y": 572,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": 1.7,
+          "caption": "",
+          "z": 8,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        }
+      ],
+      "revision": 37
+    },
+    {
+      "id": "memory-e79ea9a0-93e8-4b02-8300-53ad6c6e8bb8-4499",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-e79ea9a0-93e8-4b02-8300-53ad6c6e8bb8-4499",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 6
+    },
+    {
+      "id": "memory-3a02d66e-66bc-4b4b-8011-a0012a7c315c-9340",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-3a02d66e-66bc-4b4b-8011-a0012a7c315c-9340",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 18
+    },
+    {
+      "id": "memory-9861730f-045c-4784-a1b6-1540a663303f-5602",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 0,
+      "blocks": [
+        {
+          "id": "main-memory-9861730f-045c-4784-a1b6-1540a663303f-5602",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 8
+    },
+    {
+      "id": "memory-e868a7ab-d6d4-439c-9f05-fd88066434d0-1852",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-e868a7ab-d6d4-439c-9f05-fd88066434d0-1852",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
+        }
+      ],
+      "revision": 5
+    },
+    {
+      "id": "memory-06704578-8c2a-4931-ba23-8fd0915375db-4539",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 2,
+      "blocks": [
+        {
+          "id": "main-memory-06704578-8c2a-4931-ba23-8fd0915375db-4539",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 4
+    },
+    {
+      "id": "memory-19da3a2b-180f-4b8b-8a68-6b9407186f5a-2121",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-19da3a2b-180f-4b8b-8a68-6b9407186f5a-2121",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 4
+    },
+    {
+      "id": "memory-9243b85a-55db-4bac-a08a-071afee5517c-4615",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-9243b85a-55db-4bac-a08a-071afee5517c-4615",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 4
+    },
+    {
+      "id": "memory-7f5fd2de-8b10-4b96-b943-c922b5440243-8768",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 0,
+      "blocks": [
+        {
+          "id": "main-memory-7f5fd2de-8b10-4b96-b943-c922b5440243-8768",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 2
+    },
+    {
+      "id": "memory-8dc1a68c-dbce-471b-9d17-429c5cd43f35-9141",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-8dc1a68c-dbce-471b-9d17-429c5cd43f35-9141",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+        }
+      ],
+      "revision": 2
+    },
+    {
+      "id": "memory-e79f94ad-9455-4bd7-afda-471685ee7933-7613",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-e79f94ad-9455-4bd7-afda-471685ee7933-7613",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        },
+        {
+          "id": "dc9a9a54-15e5-44b5-a263-6da31419006d",
+          "type": "photo",
+          "x": 84,
+          "y": 260,
+          "w": 320,
+          "h": 320,
+          "width": 320,
+          "height": 320,
+          "rotation": -0.4,
+          "caption": "",
+          "z": 2,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/60d2a4cbb794677e.png"
+          }
+        }
+      ],
+      "revision": 1
+    },
+    {
+      "id": "memory-2a454006-6d8f-4327-9839-59a3a9b2fb12-2231",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-2a454006-6d8f-4327-9839-59a3a9b2fb12-2231",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        },
+        {
+          "id": "6014f7d9-b7b3-49ec-a4d0-677f25b0ee73",
+          "type": "photo",
+          "x": 84,
+          "y": 260,
+          "w": 320,
+          "h": 320,
+          "width": 320,
+          "height": 320,
+          "rotation": 2.2,
+          "caption": "",
+          "z": 2,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/05ea3bf4239dda3b.png"
+          }
+        }
+      ],
+      "revision": 1
+    },
+    {
+      "id": "memory-e8965fd2-6d9c-47ce-a77f-5034296c87a3-7404",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-e8965fd2-6d9c-47ce-a77f-5034296c87a3-7404",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        },
+        {
+          "id": "012acc2b-c4db-43b0-8a8b-106f20b2b4a0",
+          "type": "photo",
+          "x": 84,
+          "y": 260,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": -0.1,
+          "caption": "",
+          "z": 2,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/ec9c35eb52d780a0.png"
+          }
+        }
+      ],
+      "revision": 1
+    },
+    {
+      "id": "memory-7b87499c-cb46-4605-965a-22baf1e14463-3003",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-7b87499c-cb46-4605-965a-22baf1e14463-3003",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        },
+        {
+          "id": "4a740358-da9a-4b92-8d34-a7816a84f107",
+          "type": "photo",
+          "x": 84,
+          "y": 260,
+          "w": 320,
+          "h": 180,
+          "width": 320,
+          "height": 180,
+          "rotation": -0.3,
+          "caption": "",
+          "z": 2,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/5264773379b6db1f.png"
+          }
+        },
+        {
+          "id": "3a895465-e184-4d3a-b080-05d2313f2d52",
+          "type": "photo",
+          "x": 416,
+          "y": 132,
+          "w": 320,
+          "h": 320,
+          "width": 320,
+          "height": 320,
+          "rotation": 1.3,
+          "caption": "",
+          "z": 3,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/60d2a4cbb794677e.png"
+          }
+        }
+      ],
+      "revision": 2
+    }
+  ],
+  "inkColor": "#5a3a31"
+}

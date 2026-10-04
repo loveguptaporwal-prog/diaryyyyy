@@ -33,32 +33,85 @@ async function contentHash(blob) {
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
-function collectMediaIds(pages) {
-  const ids = new Set();
-  const add = (id) => {
-    if (typeof id === 'string' && id) ids.add(id);
+function mediaReferences(pages) {
+  const references = [];
+  const addGroup = (ids, page, pageIndex, block, kind, slot) => {
+    const uniqueIds = [...new Set(ids.filter((id) => typeof id === 'string' && id))];
+    if (!uniqueIds.length) return;
+    references.push({
+      ids: uniqueIds,
+      pageId: page.id,
+      pageIndex,
+      pageTitle: page.title || (page.kind === 'memory' ? 'Untitled memory' : 'Untitled page'),
+      blockId: block?.id || null,
+      blockType: block?.type || null,
+      kind,
+      slot,
+    });
   };
 
-  for (const page of pages) {
-    add(page.fields?.photoAssetId);
-    add(page.data?.profilePhoto?.mediaId);
+  pages.forEach((page, pageIndex) => {
+    addGroup([
+      page.data?.profilePhoto?.mediaId,
+      page.fields?.photoAssetId,
+    ], page, pageIndex, null, 'profile photo', 'profile');
+
     for (const block of page.blocks || []) {
-      add(block.mediaId);
-      add(block.assetId);
-      add(block.imageAssetId);
-      add(block.posterMediaId);
-      add(block.posterAssetId);
-      add(block.posterId);
-      add(block.posterImageAssetId);
-      add(block.data?.mediaId);
-      add(block.data?.assetId);
-      add(block.data?.posterMediaId);
-      add(block.data?.posterAssetId);
-      add(block.data?.posterId);
-      add(block.data?.posterImageAssetId);
+      const blockType = block.type || 'media';
+      addGroup([
+        block.data?.mediaId,
+        block.data?.assetId,
+        block.data?.imageAssetId,
+        block.data?.videoAssetId,
+        block.data?.audioAssetId,
+        block.mediaId,
+        block.assetId,
+        block.imageAssetId,
+        block.videoAssetId,
+        block.audioAssetId,
+      ], page, pageIndex, block, blockType, 'source');
+      addGroup([
+        block.data?.posterMediaId,
+        block.data?.posterAssetId,
+        block.data?.posterId,
+        block.data?.posterImageAssetId,
+        block.data?.posterVideoAssetId,
+        block.posterMediaId,
+        block.posterAssetId,
+        block.posterId,
+        block.posterImageAssetId,
+        block.posterVideoAssetId,
+      ], page, pageIndex, block, `${blockType} poster`, 'poster');
+    }
+  });
+  return references;
+}
+
+function describeReference(reference) {
+  const pageNumber = String(reference.pageIndex + 1).padStart(2, '0');
+  const location = reference.blockId
+    ? `Page ${pageNumber} '${reference.pageTitle}': ${reference.kind}`
+    : `Page ${pageNumber} '${reference.pageTitle}': profile photo`;
+  return location;
+}
+
+async function findMissingMedia(pages) {
+  const references = mediaReferences(pages);
+  const ids = [...new Set(references.flatMap((reference) => reference.ids))];
+  const records = new Map();
+  await Promise.all(ids.map(async (id) => records.set(id, await db.media.get(id))));
+
+  const missing = [];
+  for (const reference of references) {
+    for (const id of reference.ids) {
+      if (records.get(id)?.blob) continue;
+      missing.push({
+        id,
+        message: `${describeReference(reference)} is missing media '${id}'. Please re-add it or use Repair missing media.`,
+      });
     }
   }
-  return ids;
+  return { references, records, missing };
 }
 
 async function prepareMedia(pages, onProgress) {
@@ -66,7 +119,7 @@ async function prepareMedia(pages, onProgress) {
   const mediaById = new Map();
   const filenameByHash = new Map();
   const hashByFilename = new Map();
-  const ids = [...collectMediaIds(pages)];
+  const ids = [...new Set(mediaReferences(pages).flatMap((reference) => reference.ids))];
   const total = ids.length;
   const tooLarge = [];
 
@@ -141,26 +194,23 @@ function publishedPages(pages, mediaById) {
     pageCopy.blocks = (pageCopy.blocks || []).map((block) => {
       const blockCopy = { ...block };
       const data = { ...(block.data || {}) };
-      const mediaId = data.mediaId || block.mediaId || block.assetId || block.imageAssetId;
+      const mediaId = data.mediaId || data.assetId || data.imageAssetId ||
+        data.videoAssetId || data.audioAssetId || block.mediaId || block.assetId ||
+        block.imageAssetId || block.videoAssetId || block.audioAssetId;
       const posterMediaId = data.posterMediaId || data.posterAssetId ||
-        data.posterId || data.posterImageAssetId ||
-        block.posterMediaId || block.posterAssetId || block.posterId || block.posterImageAssetId;
+        data.posterId || data.posterImageAssetId || data.posterVideoAssetId ||
+        block.posterMediaId || block.posterAssetId || block.posterId ||
+        block.posterImageAssetId || block.posterVideoAssetId;
 
       if (mediaId && publicPath(mediaId)) data.src = publicPath(mediaId);
       if (posterMediaId && publicPath(posterMediaId)) data.posterSrc = publicPath(posterMediaId);
-      delete data.mediaId;
-      delete data.assetId;
-      delete data.posterMediaId;
-      delete data.posterAssetId;
-      delete data.posterId;
-      delete data.posterImageAssetId;
-      delete blockCopy.mediaId;
-      delete blockCopy.assetId;
-      delete blockCopy.imageAssetId;
-      delete blockCopy.posterMediaId;
-      delete blockCopy.posterAssetId;
-      delete blockCopy.posterId;
-      delete blockCopy.posterImageAssetId;
+      for (const key of [
+        'mediaId', 'assetId', 'imageAssetId', 'videoAssetId', 'audioAssetId',
+        'posterMediaId', 'posterAssetId', 'posterId', 'posterImageAssetId', 'posterVideoAssetId',
+      ]) {
+        delete data[key];
+        delete blockCopy[key];
+      }
       if (Object.keys(data).length) blockCopy.data = data;
       return blockCopy;
     });
@@ -179,7 +229,6 @@ function publishedMediaUrl(path) {
   } catch {
     return null;
   }
-
   const filename = url.pathname.slice(mediaDirectory.pathname.length);
   if (
     url.origin !== mediaDirectory.origin ||
@@ -191,6 +240,144 @@ function publishedMediaUrl(path) {
     return null;
   }
   return url;
+}
+
+function publishedMediaPath(value) {
+  return typeof value === 'string' && publishedMediaUrl(value) ? value : null;
+}
+
+function counterpartMediaPath(publishedPage, reference) {
+  if (!publishedPage) return null;
+  if (reference.slot === 'profile') {
+    return publishedMediaPath(publishedPage.data?.profilePhoto?.src) ||
+      publishedMediaPath(publishedPage.fields?.photoSrc);
+  }
+  const block = publishedPage.blocks?.find((item) => item.id === reference.blockId);
+  if (!block) return null;
+  const data = block.data || {};
+  return reference.slot === 'poster'
+    ? publishedMediaPath(data.posterSrc) || publishedMediaPath(block.posterSrc)
+    : publishedMediaPath(data.src) || publishedMediaPath(block.src) ||
+      publishedMediaPath(block.videoSrc) || publishedMediaPath(block.imageSrc) ||
+      publishedMediaPath(block.audioSrc) || publishedMediaPath(block.url);
+}
+
+function synchronizeReference(page, reference, mediaId) {
+  if (reference.slot === 'profile') {
+    const profilePhoto = page.data?.profilePhoto;
+    if (profilePhoto) {
+      page.data = {
+        ...page.data,
+        profilePhoto: { ...profilePhoto, mediaId },
+      };
+    }
+    if (page.fields?.photoAssetId || !profilePhoto) {
+      page.fields = { ...(page.fields || {}), photoAssetId: mediaId };
+    }
+    return;
+  }
+
+  const block = page.blocks?.find((item) => item.id === reference.blockId);
+  if (!block) return;
+  const data = { ...(block.data || {}) };
+  if (reference.slot === 'poster') {
+    data.posterMediaId = mediaId;
+    for (const key of ['posterAssetId', 'posterId', 'posterImageAssetId', 'posterVideoAssetId']) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) data[key] = mediaId;
+      if (Object.prototype.hasOwnProperty.call(block, key)) block[key] = mediaId;
+    }
+    block.posterMediaId = mediaId;
+  } else {
+    data.mediaId = mediaId;
+    block.mediaId = mediaId;
+    const typeField = block.type === 'photo' ? 'imageAssetId'
+      : block.type === 'video' ? 'assetId'
+        : block.type === 'audio' ? 'audioAssetId' : null;
+    if (typeField) block[typeField] = mediaId;
+    for (const key of ['assetId', 'imageAssetId', 'videoAssetId', 'audioAssetId']) {
+      if (Object.prototype.hasOwnProperty.call(block, key)) block[key] = mediaId;
+      if (Object.prototype.hasOwnProperty.call(data, key)) data[key] = mediaId;
+    }
+  }
+  block.data = data;
+}
+
+export async function planMissingMediaRepair(pages) {
+  const { references, records, missing } = await findMissingMedia(pages);
+  if (!missing.length) return { actions: [], unresolved: [] };
+
+  let publishedPagesById = new Map();
+  try {
+    const document = await fetchPublishedDocument();
+    publishedPagesById = new Map(document.pages.map((page) => [page.id, page]));
+  } catch {
+    // Existing valid alias IDs can still repair references without a snapshot.
+  }
+
+  const actions = [];
+  const unresolved = [];
+  const handled = new Set();
+  for (const reference of references) {
+    const absentIds = reference.ids.filter((id) => !records.get(id)?.blob);
+    if (!absentIds.length) continue;
+    const key = `${reference.pageId}:${reference.blockId || 'profile'}:${reference.slot}`;
+    if (handled.has(key)) continue;
+    handled.add(key);
+
+    const validId = reference.ids.find((id) => records.get(id)?.blob);
+    if (validId) {
+      actions.push({
+        type: 'synchronize',
+        reference,
+        mediaId: validId,
+        missingIds: absentIds,
+        description: `${describeReference(reference)}: synchronize media aliases to the available file '${validId}'.`,
+      });
+      continue;
+    }
+
+    const publishedPage = publishedPagesById.get(reference.pageId);
+    const sourcePath = counterpartMediaPath(publishedPage, reference);
+    const importableId = absentIds.find((id) => id.startsWith('import-'));
+    if (sourcePath && importableId) {
+      try {
+        const response = await fetch(new URL(sourcePath, window.location.href), { cache: 'no-cache' });
+        if (response.ok) {
+          const blob = await response.blob();
+          if (blob.size) {
+            actions.push({
+              type: 'restore',
+              reference,
+              mediaId: importableId,
+              blob: new File([blob], sourcePath.split('/').pop(), { type: blob.type }),
+              missingIds: absentIds,
+              description: `${describeReference(reference)}: restore '${importableId}' from the published file '${sourcePath}'.`,
+            });
+            continue;
+          }
+        }
+      } catch {
+        // Report this reference as unrecoverable below.
+      }
+    }
+    unresolved.push(...missing.filter((item) =>
+      absentIds.includes(item.id) && item.message.startsWith(describeReference(reference))
+    ));
+  }
+  return { actions, unresolved };
+}
+
+export async function applyMissingMediaRepair(pages, plan) {
+  const updatedPages = structuredClone(pages);
+  for (const action of plan.actions) {
+    const page = updatedPages.find((item) => item.id === action.reference.pageId);
+    if (!page) throw new Error(`Could not find ${describeReference(action.reference)} while applying repairs.`);
+    if (action.type === 'restore') {
+      await db.media.put(action.blob, action.mediaId);
+    }
+    synchronizeReference(page, action.reference, action.mediaId);
+  }
+  return updatedPages;
 }
 
 function collectPublishedMediaPaths(value, paths = new Set()) {
@@ -259,16 +446,14 @@ function pagesWithImportedMedia(pages, mediaIds) {
         },
       };
       delete pageCopy.data.profilePhoto.src;
-      if (pageCopy.fields?.photoSrc && mediaIdFor(pageCopy.fields.photoSrc)) {
-        pageCopy.fields = { ...pageCopy.fields, photoAssetId: profilePhotoId };
-        delete pageCopy.fields.photoSrc;
-      }
+      pageCopy.fields = { ...(pageCopy.fields || {}), photoAssetId: profilePhotoId };
+      delete pageCopy.fields.photoSrc;
     }
 
     pageCopy.blocks = (pageCopy.blocks || []).map((block) => {
       const blockCopy = { ...block };
       const data = { ...(block.data || {}) };
-      const sourcePath = data.src || block.src || block.videoSrc || block.imageSrc || block.url;
+      const sourcePath = data.src || block.src || block.videoSrc || block.imageSrc || block.audioSrc || block.url;
       const sourceId = mediaIdFor(sourcePath);
       const posterPath = data.posterSrc || block.posterSrc;
       const posterId = mediaIdFor(posterPath);
@@ -278,14 +463,23 @@ function pagesWithImportedMedia(pages, mediaIds) {
         data.mediaId = sourceId;
         if (block.type === 'photo') blockCopy.imageAssetId = sourceId;
         if (block.type === 'video') blockCopy.assetId = sourceId;
+        if (block.type === 'audio') blockCopy.audioAssetId = sourceId;
+        for (const key of ['assetId', 'imageAssetId', 'videoAssetId', 'audioAssetId']) {
+          if (Object.prototype.hasOwnProperty.call(blockCopy, key)) blockCopy[key] = sourceId;
+          if (Object.prototype.hasOwnProperty.call(data, key)) data[key] = sourceId;
+        }
         if (mediaIdFor(data.src)) delete data.src;
-        for (const key of ['src', 'videoSrc', 'imageSrc', 'url']) {
+        for (const key of ['src', 'videoSrc', 'imageSrc', 'audioSrc', 'url']) {
           if (mediaIdFor(blockCopy[key])) delete blockCopy[key];
         }
       }
       if (posterId) {
         blockCopy.posterMediaId = posterId;
         data.posterMediaId = posterId;
+        for (const key of ['posterAssetId', 'posterId', 'posterImageAssetId', 'posterVideoAssetId']) {
+          if (Object.prototype.hasOwnProperty.call(blockCopy, key)) blockCopy[key] = posterId;
+          if (Object.prototype.hasOwnProperty.call(data, key)) data[key] = posterId;
+        }
         if (mediaIdFor(data.posterSrc)) delete data.posterSrc;
         if (mediaIdFor(blockCopy.posterSrc)) delete blockCopy.posterSrc;
       }
@@ -333,28 +527,45 @@ async function writeDirectoryExport(directoryHandle, files, mediaRecords, onProg
   }
 }
 
-async function getDirectoryHandle() {
-  let directoryHandle = await db.settings.get('publish-directory');
-  if (directoryHandle?.name === 'public') {
-    const permission = await directoryHandle.queryPermission({ mode: 'readwrite' });
-    if (permission === 'granted') return directoryHandle;
-    if ((await directoryHandle.requestPermission({ mode: 'readwrite' })) === 'granted') {
-      return directoryHandle;
-    }
-  }
-
-  directoryHandle = await window.showDirectoryPicker({
+async function getPublishDirectoryHandle() {
+  const previousDirectory = await db.settings.get('publish-project-directory');
+  const projectDirectory = await window.showDirectoryPicker({
     id: 'project-diary-publish',
     mode: 'readwrite',
+    ...(previousDirectory ? { startIn: previousDirectory } : {}),
   });
-  if (directoryHandle.name !== 'public') {
-    throw new Error('Choose the project-d/public folder so the diary is included in the production build.');
+
+  const packageFile = await projectDirectory.getFileHandle('package.json').catch((error) => {
+    if (error.name === 'NotFoundError') {
+      throw new Error('Choose the Project D folder that contains its package.json file.');
+    }
+    throw error;
+  });
+  const packageContents = await (await packageFile.getFile()).text();
+  let packageJson;
+  try {
+    packageJson = JSON.parse(packageContents);
+  } catch (error) {
+    throw new Error('The selected folder has an invalid package.json file.', { cause: error });
   }
-  if ((await directoryHandle.requestPermission({ mode: 'readwrite' })) !== 'granted') {
-    throw new Error('Write permission was not granted for the selected public folder.');
+  if (packageJson.name !== 'project-d') {
+    throw new Error('Choose the Project D folder whose package.json has "name": "project-d".');
   }
-  await db.settings.put('publish-directory', directoryHandle);
-  return directoryHandle;
+
+  const permission = await projectDirectory.queryPermission({ mode: 'readwrite' });
+  if (permission !== 'granted' &&
+    (await projectDirectory.requestPermission({ mode: 'readwrite' })) !== 'granted') {
+    throw new Error('Write permission was not granted for the selected Project D folder.');
+  }
+
+  const publicDirectory = await projectDirectory.getDirectoryHandle('public').catch((error) => {
+    if (error.name === 'NotFoundError') {
+      throw new Error('The selected Project D folder does not contain a public folder.');
+    }
+    throw error;
+  });
+  await db.settings.put('publish-project-directory', projectDirectory);
+  return publicDirectory;
 }
 
 async function downloadZip(files, mediaRecords) {
@@ -413,6 +624,18 @@ export function emptyPublishedPages() {
 export async function exportDiary(pages, inkColor, onProgress) {
   if (!Array.isArray(pages)) throw new Error('The diary pages could not be read for export.');
 
+  onProgress('Checking all diary media before export…');
+  const { missing } = await findMissingMedia(pages);
+  if (missing.length) {
+    throw new Error(`Export stopped before writing any files. Missing media:\n${missing.map((item) => `- ${item.message}`).join('\n')}`);
+  }
+
+  let publishDirectory = null;
+  if (typeof window.showDirectoryPicker === 'function') {
+    onProgress('Choose the Project D folder that contains package.json…');
+    publishDirectory = await getPublishDirectoryHandle();
+  }
+
   const { records, mediaById, largeFiles } = await prepareMedia(pages, onProgress);
   if (largeFiles.length) onProgress(`Large media over 50 MB: ${largeFiles.join(', ')}`);
   const document = {
@@ -425,11 +648,10 @@ export async function exportDiary(pages, inkColor, onProgress) {
   const files = { document };
 
   let finalMessage;
-  if (typeof window.showDirectoryPicker === 'function') {
+  if (publishDirectory) {
     onProgress('Preparing the publish folder…');
-    const directoryHandle = await getDirectoryHandle();
-    await writeDirectoryExport(directoryHandle, files, records, onProgress);
-    finalMessage = 'Exported to public/diary. Now commit and push to publish.';
+    await writeDirectoryExport(publishDirectory, files, records, onProgress);
+    finalMessage = 'Exported to the selected Project D folder: public/diary. Now commit and push to publish.';
   } else {
     onProgress('Preparing the diary ZIP…');
     await downloadZip(files, records);

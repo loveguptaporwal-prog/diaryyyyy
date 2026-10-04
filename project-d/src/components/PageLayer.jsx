@@ -28,6 +28,7 @@ import {
   BASELINE_NUDGE,
 } from '../constants/pageLayout.js';
 import { theme } from '../theme/theme.js';
+import { useMediaUrl } from '../hooks/useMediaUrl.js';
 
 function formatDisplayDate(dateStr) {
   if (!dateStr) return 'Set date';
@@ -48,7 +49,10 @@ function formatDisplayDate(dateStr) {
  * AudioBlock Component
  */
 export function AudioBlock({ block, isSelected, isWrite, onSelect, onDelete }) {
-  const displayUrl = block.data?.src || block.audioSrc || block.url;
+  const mediaId = block.data?.mediaId || block.mediaId || block.audioAssetId;
+  const directUrl = block.data?.src || block.audioSrc || block.url;
+  const { url: mediaUrl } = useMediaUrl(mediaId, directUrl);
+  const displayUrl = directUrl || mediaUrl;
   const width = block.w || block.width || 320;
   const height = block.h || block.height || 90;
 

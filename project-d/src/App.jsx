@@ -21,7 +21,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import deskPhotoUrl from "../image/Romantic Cherry Blossom Writing Desk.png";
-import { deleteVideoAsset, deleteMediaAsset, loadDiary, makeMemoryPage, saveDiary, saveImageAsset, saveVideoAsset, saveMedia } from "./diaryModel";
+import { deleteMediaAsset, loadDiary, makeMemoryPage, saveDiary, saveImageAsset, saveVideoAsset, saveMedia } from "./diaryModel";
 import { releaseMediaUrl } from "./db/mediaUrls";
 import { useUI } from "./store/uiStore";
 import PageRectReporter from "./components/PageRectReporter";
@@ -38,7 +38,14 @@ import {
 } from "./constants/pageLayout";
 import { INK_PALETTE, HIGHLIGHT_PALETTE, INK_THEMES } from "./theme/theme";
 import { SIZES } from "./editor/ParagraphSize";
-import { emptyPublishedPages, exportDiary, importPublishedDiary, loadPublishedDiary } from "./publishing/publishDiary.js";
+import {
+  applyMissingMediaRepair,
+  emptyPublishedPages,
+  exportDiary,
+  importPublishedDiary,
+  loadPublishedDiary,
+  planMissingMediaRepair,
+} from "./publishing/publishDiary.js";
 import "./index.css";
 import "./App.css";
 
@@ -50,6 +57,24 @@ const COVER_H = 4.52;
 const COVER_DEPTH = 0.04;
 const GUTTER_W = 0.2;
 const SPINE_W = 0.18;
+
+function blockWithMediaId(block, mediaId) {
+  const data = { ...(block.data || {}), mediaId };
+  const next = { ...block, mediaId, data };
+  const typeField = block.type === 'photo' ? 'imageAssetId'
+    : block.type === 'video' ? 'assetId'
+      : block.type === 'audio' ? 'audioAssetId' : null;
+  if (typeField) next[typeField] = mediaId;
+  for (const field of ['assetId', 'imageAssetId', 'videoAssetId', 'audioAssetId']) {
+    if (Object.prototype.hasOwnProperty.call(block, field)) next[field] = mediaId;
+    if (Object.prototype.hasOwnProperty.call(data, field)) data[field] = mediaId;
+  }
+  delete data.src;
+  for (const field of ['url', 'videoSrc', 'imageSrc', 'audioSrc']) {
+    if (Object.prototype.hasOwnProperty.call(next, field)) next[field] = '';
+  }
+  return next;
+}
 
 const paper = new THREE.MeshStandardMaterial({
   color: "#fbf7ee",
@@ -2129,6 +2154,7 @@ export default function App() {
         : status);
     };
     try {
+      updateExportStatus('Checking diary media before export…');
       const message = await exportDiary(pages, inkColor, updateExportStatus);
       setExportStatus(message);
     } catch (error) {
@@ -2184,6 +2210,43 @@ export default function App() {
     }
   };
 
+  const handleRepairMissingMedia = async () => {
+    setActionsOpen(false);
+    setExportStatus('Checking for recoverable missing media…');
+    try {
+      const plan = await planMissingMediaRepair(pages);
+      const summary = [
+        ...plan.actions.map((action) => `Will fix: ${action.description}`),
+        ...plan.unresolved.map((item) => `Cannot recover: ${item.message}`),
+      ];
+      if (!summary.length) {
+        setExportStatus('No missing media or media references need repair.');
+        return;
+      }
+      if (!plan.actions.length) {
+        setExportStatus(summary.join('\n'));
+        return;
+      }
+      if (!window.confirm(`Review the media repair plan:\n\n${summary.join('\n')}\n\nApply the listed recoverable fixes?`)) {
+        setExportStatus('Media repair cancelled. No changes were made.');
+        return;
+      }
+
+      const repairedPages = await applyMissingMediaRepair(pages, plan);
+      if (!saveDiary(repairedPages)) {
+        throw new Error('Media records were repaired, but the updated page references could not be saved.');
+      }
+      setPages(repairedPages);
+      setExportStatus([
+        `Repaired ${plan.actions.length} media reference(s).`,
+        ...plan.unresolved.map((item) => `Still missing: ${item.message}`),
+      ].join('\n'));
+    } catch (error) {
+      console.error('Failed to repair missing media:', error);
+      setExportStatus(`Media repair failed: ${error.message}`);
+    }
+  };
+
   const handleReturnToEditing = () => {
     setPreviewPublished(false);
     setActiveIndex(Math.min(previewReturnIndex.current, Math.max(0, pages.length - 1)));
@@ -2228,31 +2291,33 @@ export default function App() {
     if (!target) return;
     updatePage(pageId, { blocks: (target.blocks || []).map(block => block.id === blockId ? { ...block, ...changes } : block) });
   };
-  const revokeAsset = assetId => {
-    if (!assetId) return;
-    const url = videoAssetUrls[assetId];
-    if (url) { URL.revokeObjectURL(url); videoObjectUrlsRef.current.delete(url); }
-    setVideoAssetUrls(all => { const next = { ...all }; delete next[assetId]; return next; });
-    deleteVideoAsset(assetId).catch(() => {});
-  };
-  const profilePhotoMediaIsUsedElsewhere = (mediaId, ownerPageId) => pages.some(page => {
-    if (page.id !== ownerPageId && page.fields?.photoAssetId === mediaId) return true;
-    if ((page.blocks || []).some(block =>
-      block.mediaId === mediaId ||
-      block.assetId === mediaId ||
-      block.imageAssetId === mediaId ||
-      block.data?.mediaId === mediaId
-    )) return true;
-    if (page.id !== ownerPageId) {
-      const profileMediaId = Object.prototype.hasOwnProperty.call(page.data || {}, 'profilePhoto')
-        ? page.data.profilePhoto?.mediaId
-        : page.fields?.photoAssetId;
-      if (profileMediaId === mediaId) return true;
-    }
-    return false;
+  const mediaIdIsReferenced = (mediaId, candidatePages) => candidatePages.some((page) => {
+    if (page.fields?.photoAssetId === mediaId || page.data?.profilePhoto?.mediaId === mediaId) return true;
+    return (page.blocks || []).some((block) => [
+      block.mediaId,
+      block.assetId,
+      block.imageAssetId,
+      block.videoAssetId,
+      block.audioAssetId,
+      block.posterMediaId,
+      block.posterAssetId,
+      block.posterId,
+      block.posterImageAssetId,
+      block.posterVideoAssetId,
+      block.data?.mediaId,
+      block.data?.assetId,
+      block.data?.imageAssetId,
+      block.data?.videoAssetId,
+      block.data?.audioAssetId,
+      block.data?.posterMediaId,
+      block.data?.posterAssetId,
+      block.data?.posterId,
+      block.data?.posterImageAssetId,
+      block.data?.posterVideoAssetId,
+    ].includes(mediaId));
   });
-  const removeProfilePhotoAssetIfUnused = async (mediaId, ownerPageId) => {
-    if (!mediaId || profilePhotoMediaIsUsedElsewhere(mediaId, ownerPageId)) return;
+  const deleteMediaIfUnused = async (mediaId, remainingPages) => {
+    if (!mediaId || mediaIdIsReferenced(mediaId, remainingPages)) return;
     const url = videoAssetUrls[mediaId];
     if (url) {
       URL.revokeObjectURL(url);
@@ -2263,26 +2328,27 @@ export default function App() {
         return next;
       });
     }
+    releaseMediaUrl(mediaId);
     await deleteMediaAsset(mediaId);
   };
   const handleProfilePhotoUpload = async (pageId, file) => {
     try {
       const mediaId = await saveMedia(file, 'photo');
       const target = pages.find(page => page.id === pageId);
-      const previousMediaId = target?.data?.profilePhoto?.mediaId ||
-        (!Object.prototype.hasOwnProperty.call(target?.data || {}, 'profilePhoto') ? target?.fields?.photoAssetId : null);
-      updatePage(pageId, {
+      const previousMediaIds = [
+        target?.data?.profilePhoto?.mediaId,
+        target?.fields?.photoAssetId,
+      ].filter((id) => id && id !== mediaId);
+      const updatedPages = pages.map((page) => page.id === pageId ? {
+        ...page,
         data: {
           ...(target?.data || {}),
           profilePhoto: { mediaId, focusX: 50, focusY: 50, zoom: 1 },
         },
-      });
-      if (target?.fields?.photoAssetId) {
-        updatePage(pageId, { fields: { ...target.fields, photoAssetId: null } });
-      }
-      if (previousMediaId && previousMediaId !== mediaId) {
-        await removeProfilePhotoAssetIfUnused(previousMediaId, pageId);
-      }
+        fields: { ...(target?.fields || {}), photoAssetId: mediaId },
+      } : page);
+      setPages(updatedPages);
+      await Promise.all(previousMediaIds.map((id) => deleteMediaIfUnused(id, updatedPages)));
     } catch (error) {
       console.error('Error saving profile photo:', error);
       showToast("Couldn't save profile photo");
@@ -2304,12 +2370,14 @@ export default function App() {
   const handleProfilePhotoRemove = async (pageId) => {
     const target = pages.find(page => page.id === pageId);
     const mediaId = target?.data?.profilePhoto?.mediaId || target?.fields?.photoAssetId;
-    updatePage(pageId, {
+    const updatedPages = pages.map((page) => page.id === pageId ? {
+      ...page,
       data: { ...(target?.data || {}), profilePhoto: null },
       fields: { ...(target?.fields || {}), photoAssetId: null },
-    });
+    } : page);
+    setPages(updatedPages);
     try {
-      await removeProfilePhotoAssetIfUnused(mediaId, pageId);
+      await deleteMediaIfUnused(mediaId, updatedPages);
     } catch (error) {
       console.error('Error removing profile photo media:', error);
       showToast("Couldn't remove profile photo");
@@ -2431,18 +2499,45 @@ export default function App() {
   const onImage = (event, field, blockId) => loadImageFile(event, assetId => {
     if (!current) return;
     if (field === "photo") {
-      const previousAsset = current.fields?.photoAssetId;
-      updatePage(current.id, { fields: { ...(current.fields || {}), photoAssetId: assetId } });
-      if (previousAsset) revokeAsset(previousAsset);
+      const previousAssets = [current.fields?.photoAssetId].filter(Boolean);
+      const updatedPages = pages.map((page) => page.id === current.id
+        ? { ...page, fields: { ...(page.fields || {}), photoAssetId: assetId, photoSrc: null } }
+        : page);
+      setPages(updatedPages);
+      previousAssets.forEach((previousAsset) => {
+        if (previousAsset !== assetId) deleteMediaIfUnused(previousAsset, updatedPages).catch(console.error);
+      });
     } else if (blockId) {
-      const previousAsset = current.blocks?.find(block => block.id === blockId)?.imageAssetId;
-      updateBlock(current.id, blockId, { imageAssetId: assetId, url: "" });
-      if (previousAsset) revokeAsset(previousAsset);
+      const previousBlock = current.blocks?.find(block => block.id === blockId);
+      const previousAssets = [
+        previousBlock?.mediaId,
+        previousBlock?.assetId,
+        previousBlock?.imageAssetId,
+        previousBlock?.videoAssetId,
+        previousBlock?.audioAssetId,
+        previousBlock?.data?.mediaId,
+        previousBlock?.data?.assetId,
+        previousBlock?.data?.imageAssetId,
+        previousBlock?.data?.videoAssetId,
+        previousBlock?.data?.audioAssetId,
+      ].filter(Boolean);
+      const updatedPages = pages.map((page) => page.id === current.id ? {
+        ...page,
+        blocks: (page.blocks || []).map((block) => {
+          if (block.id !== blockId) return block;
+          const data = { ...(block.data || {}), mediaId: assetId };
+          return blockWithMediaId({ ...block, data }, assetId);
+        }),
+      } : page);
+      setPages(updatedPages);
+      previousAssets.filter((id) => id !== assetId).forEach((id) => {
+        deleteMediaIfUnused(id, updatedPages).catch(console.error);
+      });
     } else {
       const layout = getMemoryBlockRects(current);
       const id = crypto.randomUUID();
       const top = editor?.y || Math.max(278, (layout.at(-1)?.bottom || 260) + 24);
-      updatePage(current.id, { blocks: [...(current.blocks || []), { id, type: "photo", imageAssetId: assetId, top, x: 84, y: top - 30, width: 300, height: 170, rotation: Math.round(Math.random() * 6 - 3), caption: "" }] });
+      updatePage(current.id, { blocks: [...(current.blocks || []), { id, type: "photo", mediaId: assetId, imageAssetId: assetId, data: { mediaId: assetId }, top, x: 84, y: top - 30, width: 300, height: 170, rotation: Math.round(Math.random() * 6 - 3), caption: "" }] });
     }
     setEditor(null);
   });
@@ -2456,15 +2551,49 @@ export default function App() {
       const url = URL.createObjectURL(file);
       videoObjectUrlsRef.current.add(url);
       setVideoAssetUrls(all => ({ ...all, [assetId]: url }));
-      updateBlock(current.id, blockId, { assetId, url: "" });
-      if (previous?.assetId) revokeAsset(previous.assetId);
+      const previousAssets = [
+        previous?.mediaId, previous?.assetId, previous?.imageAssetId,
+        previous?.videoAssetId, previous?.audioAssetId,
+        previous?.data?.mediaId, previous?.data?.assetId,
+        previous?.data?.imageAssetId, previous?.data?.videoAssetId,
+        previous?.data?.audioAssetId,
+      ].filter(Boolean);
+      const updatedPages = pages.map((page) => page.id === current.id ? {
+        ...page,
+        blocks: (page.blocks || []).map((block) => block.id === blockId ? {
+          ...blockWithMediaId(block, assetId),
+        } : block),
+      } : page);
+      setPages(updatedPages);
+      previousAssets.filter((id) => id !== assetId).forEach((id) => {
+        deleteMediaIfUnused(id, updatedPages).catch(console.error);
+      });
       setEditor(null);
     } catch { setEditor(null); }
   };
   const onVideoUrlChange = (pageId, blockId, url) => {
-    const block = pages.find(page => page.id === pageId)?.blocks?.find(item => item.id === blockId);
-    if (block?.assetId) revokeAsset(block.assetId);
-    updateBlock(pageId, blockId, { url, assetId: null });
+    const page = pages.find(item => item.id === pageId);
+    const block = page?.blocks?.find(item => item.id === blockId);
+    if (!block) return;
+    const previousAssets = [
+      block.mediaId, block.assetId, block.imageAssetId, block.videoAssetId,
+      block.audioAssetId, block.data?.mediaId, block.data?.assetId,
+      block.data?.imageAssetId, block.data?.videoAssetId, block.data?.audioAssetId,
+    ].filter(Boolean);
+    const updatedPages = pages.map((item) => item.id === pageId ? {
+      ...item,
+      blocks: (item.blocks || []).map((entry) => {
+        if (entry.id !== blockId) return entry;
+        const data = { ...(entry.data || {}) };
+        for (const key of ['mediaId', 'assetId', 'imageAssetId', 'videoAssetId', 'audioAssetId', 'src']) delete data[key];
+        const next = { ...entry, url, assetId: null, mediaId: null };
+        for (const key of ['imageAssetId', 'videoAssetId', 'audioAssetId']) delete next[key];
+        next.data = data;
+        return next;
+      }),
+    } : item);
+    setPages(updatedPages);
+    previousAssets.forEach((id) => deleteMediaIfUnused(id, updatedPages).catch(console.error));
   };
   const removeBlock = (pageId, blockId) => {
     const targetId = pageId || current?.id;
@@ -2472,10 +2601,19 @@ export default function App() {
     const target = pages.find(page => page.id === targetId);
     if (!target) return;
     const block = target.blocks?.find(item => item.id === blockId);
-    if (block?.assetId) revokeAsset(block.assetId);
-    if (block?.imageAssetId) revokeAsset(block.imageAssetId);
-    if (block?.mediaId) releaseMediaUrl(block.mediaId);
-    updatePage(targetId, { blocks: (target.blocks || []).filter(b => b.id !== blockId) });
+    const mediaIds = [
+      block?.mediaId, block?.assetId, block?.imageAssetId, block?.videoAssetId, block?.audioAssetId,
+      block?.posterMediaId, block?.posterAssetId, block?.posterId, block?.posterImageAssetId,
+      block?.data?.mediaId, block?.data?.assetId, block?.data?.imageAssetId,
+      block?.data?.videoAssetId, block?.data?.audioAssetId,
+      block?.data?.posterMediaId, block?.data?.posterAssetId, block?.data?.posterId,
+      block?.data?.posterImageAssetId, block?.data?.posterVideoAssetId,
+    ].filter(Boolean);
+    const updatedPages = pages.map((page) => page.id === targetId
+      ? { ...page, blocks: (page.blocks || []).filter((item) => item.id !== blockId) }
+      : page);
+    setPages(updatedPages);
+    mediaIds.forEach((id) => deleteMediaIfUnused(id, updatedPages).catch(console.error));
     setEditor(null);
     setSelectedBlock(null);
   };
@@ -2637,10 +2775,9 @@ export default function App() {
         ? Math.round((Math.random() * 6 - 3) * 10) / 10
         : 0;
 
-      const newBlock = {
+      const newBlock = blockWithMediaId({
         id: crypto.randomUUID(),
         type: blockType,
-        mediaId,
         x: clamped.x,
         y: clamped.y,
         w: clamped.w,
@@ -2650,8 +2787,11 @@ export default function App() {
         rotation: randomRotation,
         caption: '',
         z: maxZ + 1,
-        data: { mediaId, placement: 'free' },
-      };
+        ...(blockType === 'photo' ? { imageAssetId: mediaId } : {}),
+        ...(blockType === 'video' ? { assetId: mediaId } : {}),
+        ...(blockType === 'audio' ? { audioAssetId: mediaId } : {}),
+        data: { placement: 'free' },
+      }, mediaId);
 
       const updatedBlocks = [...(targetPage.blocks || []), newBlock];
       updatePage(targetPage.id, { blocks: updatedBlocks });
@@ -2675,7 +2815,26 @@ export default function App() {
     if (kind === 'video') warnForLargeVideo(file);
     try {
       const mediaId = await saveMedia(file, kind);
-      updateBlock(activePageId || current?.id, blockId, { mediaId, data: { mediaId } });
+      const ownerPage = pages.find((page) => page.blocks?.some((block) => block.id === blockId));
+      const previousBlock = ownerPage?.blocks?.find((block) => block.id === blockId);
+      if (!ownerPage || !previousBlock) throw new Error('Could not find the media block being replaced.');
+      const previousIds = [
+        previousBlock.mediaId, previousBlock.assetId, previousBlock.imageAssetId,
+        previousBlock.videoAssetId, previousBlock.audioAssetId,
+        previousBlock.data?.mediaId, previousBlock.data?.assetId,
+        previousBlock.data?.imageAssetId, previousBlock.data?.videoAssetId,
+        previousBlock.data?.audioAssetId,
+      ].filter(Boolean);
+      const updatedPages = pages.map((page) => page.id === ownerPage.id ? {
+        ...page,
+        blocks: (page.blocks || []).map((block) => block.id === blockId
+          ? blockWithMediaId(block, mediaId)
+          : block),
+      } : page);
+      setPages(updatedPages);
+      previousIds.filter((id) => id !== mediaId).forEach((id) => {
+        deleteMediaIfUnused(id, updatedPages).catch(console.error);
+      });
     } catch (err) {
       console.error('Error replacing media:', err);
       showToast("Couldn't replace media");
@@ -2861,13 +3020,24 @@ export default function App() {
 
   const deletePage = () => {
     if (!current || !window.confirm("Delete this page from your diary?")) return;
-    current.blocks?.forEach(block => {
-      if (block.assetId) revokeAsset(block.assetId);
-      if (block.imageAssetId) revokeAsset(block.imageAssetId);
-    });
-    if (current.fields?.photoAssetId) revokeAsset(current.fields.photoAssetId);
+    const mediaIds = [
+      current.fields?.photoAssetId,
+      current.data?.profilePhoto?.mediaId,
+      ...(current.blocks || []).flatMap((block) => [
+        block.mediaId, block.assetId, block.imageAssetId, block.videoAssetId, block.audioAssetId,
+        block.posterMediaId, block.posterAssetId, block.posterId, block.posterImageAssetId,
+        block.posterVideoAssetId,
+        block.posterVideoAssetId,
+        block.data?.mediaId, block.data?.assetId, block.data?.imageAssetId,
+        block.data?.videoAssetId, block.data?.audioAssetId,
+        block.data?.posterMediaId, block.data?.posterAssetId, block.data?.posterId,
+        block.data?.posterImageAssetId, block.data?.posterVideoAssetId,
+      ]),
+    ].filter(Boolean);
     for (const key of videoTextureSources.keys()) if (key.startsWith(`${current.id}:`)) { videoTextureSources.get(key)?.video.pause(); videoTextureSources.delete(key); }
-    setPages(all => all.filter(page => page.id !== current.id));
+    const updatedPages = pages.filter(page => page.id !== current.id);
+    setPages(updatedPages);
+    mediaIds.forEach((id) => deleteMediaIfUnused(id, updatedPages).catch(console.error));
     setActiveIndex(Math.max(0, activeIndex - 1)); setEditor(null); setActionsOpen(false);
   };
   const movePage = direction => {
@@ -3071,6 +3241,7 @@ export default function App() {
                     <>
                       <button onClick={handlePreviewPublished}>Preview published version</button>
                       <button onClick={handleLoadPublishedForEditing}>Load published version into editor</button>
+                      <button onClick={handleRepairMissingMedia}>Repair missing media</button>
                       <button onClick={handleExportForPublishing}>Export for publishing</button>
                     </>
                   )}

@@ -49,6 +49,7 @@ export default function TextBlock({
       StarterKit.configure({
         heading: { levels: [2, 3] },
         history: true,
+        underline: false,
       }),
       TextStyle,
       Color,

@@ -2028,7 +2028,13 @@ function Scene({ opened, setOpened, pages, activeIndex, setActiveIndex, editor, 
 ========================================================= */
 
 export default function App() {
-  const [pages, setPages] = useState(() => import.meta.env.PROD ? [] : loadDiary());
+  const [pages, setPagesState] = useState(() => import.meta.env.PROD ? [] : loadDiary());
+  const pagesRef = useRef(pages);
+  const setPages = useCallback((update) => {
+    const nextPages = typeof update === 'function' ? update(pagesRef.current) : update;
+    pagesRef.current = nextPages;
+    setPagesState(nextPages);
+  }, []);
   const [activeIndex, setActiveIndex] = useState(0);
   const [opened, setOpened] = useState(false);
   const [editor, setEditor] = useState(null);
@@ -2155,7 +2161,11 @@ export default function App() {
     };
     try {
       updateExportStatus('Checking diary media before export…');
-      const message = await exportDiary(pages, inkColor, updateExportStatus);
+      const exportPages = pagesRef.current;
+      if (!saveDiary(exportPages)) {
+        throw new Error('Could not save the current diary state in this browser. Export was stopped; please free browser storage and try again.');
+      }
+      const message = await exportDiary(exportPages, inkColor, updateExportStatus);
       setExportStatus(message);
     } catch (error) {
       console.error('Failed to export diary for publishing:', error);
@@ -2276,21 +2286,26 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [opened, isReadOnly, setMode]);
 
-  const updatePage = (id, changes) => setPages(all => all.map(page => page.id === id ? { ...page, ...changes, revision: (page.revision || 0) + 1 } : page));
+  const updatePage = (id, changes) => setPages(all => all.map(page => {
+    if (page.id !== id) return page;
+    const pageChanges = typeof changes === 'function' ? changes(page) : changes;
+    return { ...page, ...pageChanges, revision: (page.revision || 0) + 1 };
+  }));
   const updateField = (pageId, key, value) => {
-    const targetId = pageId || current?.id;
+    const targetId = pageId || pagesRef.current[activeIndex]?.id;
     if (!targetId) return;
     if (["title", "date", "mood", "dates"].includes(key)) updatePage(targetId, { [key]: value });
-    else {
-      const pageObj = pages.find(p => p.id === targetId);
-      updatePage(targetId, { fields: { ...(pageObj?.fields || {}), [key]: value } });
+    else updatePage(targetId, page => ({
+      fields: { ...(page.fields || {}), [key]: value },
+    }));
+  };
+  const updateBlock = (pageId, blockId, changes) => setPages(all => all.map(page => page.id === pageId
+    ? {
+      ...page,
+      revision: (page.revision || 0) + 1,
+      blocks: (page.blocks || []).map(block => block.id === blockId ? { ...block, ...changes } : block),
     }
-  };
-  const updateBlock = (pageId, blockId, changes) => {
-    const target = pages.find(page => page.id === pageId);
-    if (!target) return;
-    updatePage(pageId, { blocks: (target.blocks || []).map(block => block.id === blockId ? { ...block, ...changes } : block) });
-  };
+    : page));
   const mediaIdIsReferenced = (mediaId, candidatePages) => candidatePages.some((page) => {
     if (page.fields?.photoAssetId === mediaId || page.data?.profilePhoto?.mediaId === mediaId) return true;
     return (page.blocks || []).some((block) => [
@@ -2316,8 +2331,8 @@ export default function App() {
       block.data?.posterVideoAssetId,
     ].includes(mediaId));
   });
-  const deleteMediaIfUnused = async (mediaId, remainingPages) => {
-    if (!mediaId || mediaIdIsReferenced(mediaId, remainingPages)) return;
+  const deleteMediaIfUnused = async (mediaId) => {
+    if (!mediaId || mediaIdIsReferenced(mediaId, pagesRef.current)) return;
     const url = videoAssetUrls[mediaId];
     if (url) {
       URL.revokeObjectURL(url);
@@ -2334,12 +2349,13 @@ export default function App() {
   const handleProfilePhotoUpload = async (pageId, file) => {
     try {
       const mediaId = await saveMedia(file, 'photo');
-      const target = pages.find(page => page.id === pageId);
+      const latestPages = pagesRef.current;
+      const target = latestPages.find(page => page.id === pageId);
       const previousMediaIds = [
         target?.data?.profilePhoto?.mediaId,
         target?.fields?.photoAssetId,
       ].filter((id) => id && id !== mediaId);
-      const updatedPages = pages.map((page) => page.id === pageId ? {
+      const updatedPages = latestPages.map((page) => page.id === pageId ? {
         ...page,
         data: {
           ...(target?.data || {}),
@@ -2355,22 +2371,23 @@ export default function App() {
     }
   };
   const handleProfilePhotoUpdate = (pageId, changes) => {
-    const target = pages.find(page => page.id === pageId);
-    if (!target) return;
-    const existing = target.data?.profilePhoto || {
-      mediaId: target.fields?.photoAssetId,
-      focusX: 50,
-      focusY: 50,
-      zoom: 1,
-    };
-    updatePage(pageId, {
-      data: { ...(target.data || {}), profilePhoto: { ...existing, ...changes } },
+    updatePage(pageId, page => {
+      const existing = page.data?.profilePhoto || {
+        mediaId: page.fields?.photoAssetId,
+        focusX: 50,
+        focusY: 50,
+        zoom: 1,
+      };
+      return {
+        data: { ...(page.data || {}), profilePhoto: { ...existing, ...changes } },
+      };
     });
   };
   const handleProfilePhotoRemove = async (pageId) => {
-    const target = pages.find(page => page.id === pageId);
+    const latestPages = pagesRef.current;
+    const target = latestPages.find(page => page.id === pageId);
     const mediaId = target?.data?.profilePhoto?.mediaId || target?.fields?.photoAssetId;
-    const updatedPages = pages.map((page) => page.id === pageId ? {
+    const updatedPages = latestPages.map((page) => page.id === pageId ? {
       ...page,
       data: { ...(target?.data || {}), profilePhoto: null },
       fields: { ...(target?.fields || {}), photoAssetId: null },
@@ -2384,14 +2401,15 @@ export default function App() {
     }
   };
   const continueToNextPage = (pageId) => {
-    const currentPageIndex = pages.findIndex(page => page.id === pageId);
+    const latestPages = pagesRef.current;
+    const currentPageIndex = latestPages.findIndex(page => page.id === pageId);
     if (currentPageIndex < 0) return;
-    let nextPage = pages[currentPageIndex + 1];
-    let nextPages = pages;
+    let nextPage = latestPages[currentPageIndex + 1];
+    let nextPages = latestPages;
     if (!nextPage || nextPage.kind !== 'memory') {
       nextPage = makeMemoryPage();
-      nextPages = [...pages, nextPage];
-      setPages(nextPages);
+      nextPages = [...latestPages, nextPage];
+      setPages(all => [...all, nextPage]);
     }
     const nextPageIndex = nextPages.findIndex(page => page.id === nextPage.id);
     const currentSpread = Math.floor(currentPageIndex / 2) * 2;
@@ -2409,11 +2427,12 @@ export default function App() {
     }
   };
   const addContent = (pageId, type) => {
-    const target = pages.find((p) => p.id === pageId) || current;
+    const latestPages = pagesRef.current;
+    const target = latestPages.find((p) => p.id === pageId) || current;
     if (!target) return;
     if (type === "date") {
       const entry = { id: crypto.randomUUID(), date: "", title: "", type: "Special date", note: "" };
-      updatePage(target.id, { dates: [...(target.dates || []), entry] });
+      updatePage(target.id, page => ({ dates: [...(page.dates || []), entry] }));
       setEditor({ pageId: target.id, kind: "date-entry", dateId: entry.id, row: (target.dates || []).length });
       return;
     }
@@ -2435,7 +2454,7 @@ export default function App() {
         text: '',
         html: '',
       };
-      updatePage(target.id, { blocks: [...(target.blocks || []), block] });
+      updatePage(target.id, page => ({ blocks: [...(page.blocks || []), block] }));
       setSelectedBlock(id);
       return;
     }
@@ -2451,7 +2470,7 @@ export default function App() {
         width: 450,
         items: [{ id: crypto.randomUUID(), text: '', done: false }],
       };
-      updatePage(target.id, { blocks: [...(target.blocks || []), block] });
+      updatePage(target.id, page => ({ blocks: [...(page.blocks || []), block] }));
       setSelectedBlock(id);
       return;
     }
@@ -2467,7 +2486,7 @@ export default function App() {
         height: 240,
         url: '',
       };
-      updatePage(target.id, { blocks: [...(target.blocks || []), block] });
+      updatePage(target.id, page => ({ blocks: [...(page.blocks || []), block] }));
       setSelectedBlock(id);
       return;
     }
@@ -2496,61 +2515,74 @@ export default function App() {
       image.src = sourceUrl;
     } catch { setEditor(null); }
   };
-  const onImage = (event, field, blockId) => loadImageFile(event, assetId => {
-    if (!current) return;
-    if (field === "photo") {
-      const previousAssets = [current.fields?.photoAssetId].filter(Boolean);
-      const updatedPages = pages.map((page) => page.id === current.id
-        ? { ...page, fields: { ...(page.fields || {}), photoAssetId: assetId, photoSrc: null } }
-        : page);
-      setPages(updatedPages);
-      previousAssets.forEach((previousAsset) => {
-        if (previousAsset !== assetId) deleteMediaIfUnused(previousAsset, updatedPages).catch(console.error);
-      });
-    } else if (blockId) {
-      const previousBlock = current.blocks?.find(block => block.id === blockId);
-      const previousAssets = [
-        previousBlock?.mediaId,
-        previousBlock?.assetId,
-        previousBlock?.imageAssetId,
-        previousBlock?.videoAssetId,
-        previousBlock?.audioAssetId,
-        previousBlock?.data?.mediaId,
-        previousBlock?.data?.assetId,
-        previousBlock?.data?.imageAssetId,
-        previousBlock?.data?.videoAssetId,
-        previousBlock?.data?.audioAssetId,
-      ].filter(Boolean);
-      const updatedPages = pages.map((page) => page.id === current.id ? {
-        ...page,
-        blocks: (page.blocks || []).map((block) => {
-          if (block.id !== blockId) return block;
-          const data = { ...(block.data || {}), mediaId: assetId };
-          return blockWithMediaId({ ...block, data }, assetId);
-        }),
-      } : page);
-      setPages(updatedPages);
-      previousAssets.filter((id) => id !== assetId).forEach((id) => {
-        deleteMediaIfUnused(id, updatedPages).catch(console.error);
-      });
-    } else {
-      const layout = getMemoryBlockRects(current);
-      const id = crypto.randomUUID();
-      const top = editor?.y || Math.max(278, (layout.at(-1)?.bottom || 260) + 24);
-      updatePage(current.id, { blocks: [...(current.blocks || []), { id, type: "photo", mediaId: assetId, imageAssetId: assetId, data: { mediaId: assetId }, top, x: 84, y: top - 30, width: 300, height: 170, rotation: Math.round(Math.random() * 6 - 3), caption: "" }] });
-    }
-    setEditor(null);
-  });
+  const onImage = (event, field, blockId) => {
+    const pageId = current?.id;
+    if (!pageId) return;
+    loadImageFile(event, assetId => {
+      const latestPages = pagesRef.current;
+      const targetPage = latestPages.find(page => page.id === pageId);
+      if (!targetPage) return;
+      if (field === "photo") {
+        const previousAssets = [targetPage.fields?.photoAssetId].filter(Boolean);
+        const updatedPages = latestPages.map((page) => page.id === pageId
+          ? { ...page, fields: { ...(page.fields || {}), photoAssetId: assetId, photoSrc: null } }
+          : page);
+        setPages(updatedPages);
+        previousAssets.forEach((previousAsset) => {
+          if (previousAsset !== assetId) deleteMediaIfUnused(previousAsset).catch(console.error);
+        });
+      } else if (blockId) {
+        const previousBlock = targetPage.blocks?.find(block => block.id === blockId);
+        const previousAssets = [
+          previousBlock?.mediaId,
+          previousBlock?.assetId,
+          previousBlock?.imageAssetId,
+          previousBlock?.videoAssetId,
+          previousBlock?.audioAssetId,
+          previousBlock?.data?.mediaId,
+          previousBlock?.data?.assetId,
+          previousBlock?.data?.imageAssetId,
+          previousBlock?.data?.videoAssetId,
+          previousBlock?.data?.audioAssetId,
+        ].filter(Boolean);
+        const updatedPages = latestPages.map((page) => page.id === pageId ? {
+          ...page,
+          blocks: (page.blocks || []).map((block) => {
+            if (block.id !== blockId) return block;
+            const data = { ...(block.data || {}), mediaId: assetId };
+            return blockWithMediaId({ ...block, data }, assetId);
+          }),
+        } : page);
+        setPages(updatedPages);
+        previousAssets.filter((id) => id !== assetId).forEach((id) => {
+          deleteMediaIfUnused(id).catch(console.error);
+        });
+      } else {
+        const id = crypto.randomUUID();
+        updatePage(pageId, page => {
+          const layout = getMemoryBlockRects(page);
+          const top = editor?.y || Math.max(278, (layout.at(-1)?.bottom || 260) + 24);
+          return {
+            blocks: [...(page.blocks || []), { id, type: "photo", mediaId: assetId, imageAssetId: assetId, data: { mediaId: assetId }, top, x: 84, y: top - 30, width: 300, height: 170, rotation: Math.round(Math.random() * 6 - 3), caption: "" }],
+          };
+        });
+      }
+      setEditor(null);
+    });
+  };
   const onVideoUpload = async (event, blockId) => {
     const file = event.target.files?.[0];
-    if (!file || !current) return;
+    const pageId = current?.id;
+    if (!file || !pageId) return;
     warnForLargeVideo(file);
-    const previous = current.blocks?.find(block => block.id === blockId);
     try {
       const assetId = await saveVideoAsset(file);
       const url = URL.createObjectURL(file);
       videoObjectUrlsRef.current.add(url);
       setVideoAssetUrls(all => ({ ...all, [assetId]: url }));
+      const latestPages = pagesRef.current;
+      const page = latestPages.find(item => item.id === pageId);
+      const previous = page?.blocks?.find(block => block.id === blockId);
       const previousAssets = [
         previous?.mediaId, previous?.assetId, previous?.imageAssetId,
         previous?.videoAssetId, previous?.audioAssetId,
@@ -2558,7 +2590,7 @@ export default function App() {
         previous?.data?.imageAssetId, previous?.data?.videoAssetId,
         previous?.data?.audioAssetId,
       ].filter(Boolean);
-      const updatedPages = pages.map((page) => page.id === current.id ? {
+      const updatedPages = latestPages.map((page) => page.id === pageId ? {
         ...page,
         blocks: (page.blocks || []).map((block) => block.id === blockId ? {
           ...blockWithMediaId(block, assetId),
@@ -2572,7 +2604,7 @@ export default function App() {
     } catch { setEditor(null); }
   };
   const onVideoUrlChange = (pageId, blockId, url) => {
-    const page = pages.find(item => item.id === pageId);
+    const page = pagesRef.current.find(item => item.id === pageId);
     const block = page?.blocks?.find(item => item.id === blockId);
     if (!block) return;
     const previousAssets = [
@@ -2580,7 +2612,7 @@ export default function App() {
       block.audioAssetId, block.data?.mediaId, block.data?.assetId,
       block.data?.imageAssetId, block.data?.videoAssetId, block.data?.audioAssetId,
     ].filter(Boolean);
-    const updatedPages = pages.map((item) => item.id === pageId ? {
+    const updatedPages = pagesRef.current.map((item) => item.id === pageId ? {
       ...item,
       blocks: (item.blocks || []).map((entry) => {
         if (entry.id !== blockId) return entry;
@@ -2598,7 +2630,8 @@ export default function App() {
   const removeBlock = (pageId, blockId) => {
     const targetId = pageId || current?.id;
     if (!targetId) return;
-    const target = pages.find(page => page.id === targetId);
+    const latestPages = pagesRef.current;
+    const target = latestPages.find(page => page.id === targetId);
     if (!target) return;
     const block = target.blocks?.find(item => item.id === blockId);
     const mediaIds = [
@@ -2609,7 +2642,7 @@ export default function App() {
       block?.data?.posterMediaId, block?.data?.posterAssetId, block?.data?.posterId,
       block?.data?.posterImageAssetId, block?.data?.posterVideoAssetId,
     ].filter(Boolean);
-    const updatedPages = pages.map((page) => page.id === targetId
+    const updatedPages = latestPages.map((page) => page.id === targetId
       ? { ...page, blocks: (page.blocks || []).filter((item) => item.id !== blockId) }
       : page);
     setPages(updatedPages);
@@ -2619,10 +2652,9 @@ export default function App() {
   };
 
   const handleAddBlockDirect = (pageId, newBlock) => {
-    const targetPage = pages.find((p) => p.id === pageId);
+    const targetPage = pagesRef.current.find((p) => p.id === pageId);
     if (!targetPage) return;
-    const updated = [...(targetPage.blocks || []), newBlock];
-    updatePage(pageId, { blocks: updated });
+    updatePage(pageId, page => ({ blocks: [...(page.blocks || []), newBlock] }));
   };
 
   const moveBlockToPage = (fromPageId, toPageId, blockId, clampedBlock) => {
@@ -2654,9 +2686,10 @@ export default function App() {
     if (blockType === 'video') warnForLargeVideo(file);
 
     const spreadLeft = Math.floor(activeIndex / 2) * 2;
-    const leftPage = pages[spreadLeft];
-    const rightPage = pages[spreadLeft + 1];
-    let targetPage = pages.find((p) => p.id === targetPageId) || leftPage || rightPage || current;
+    const latestPages = pagesRef.current;
+    const leftPage = latestPages[spreadLeft];
+    const rightPage = latestPages[spreadLeft + 1];
+    let targetPage = latestPages.find((p) => p.id === targetPageId) || leftPage || rightPage || current;
     if (!targetPage) return;
 
     let baseW = blockType === 'photo' ? 300 : blockType === 'video' ? 340 : 320;
@@ -2742,7 +2775,7 @@ export default function App() {
       }
       if (spot) {
         targetPage = otherSpreadPage;
-        const pageIdx = pages.findIndex((p) => p.id === targetPage.id) + 1;
+        const pageIdx = pagesRef.current.findIndex((p) => p.id === targetPage.id) + 1;
         showToast(`Page is full — added to page ${String(pageIdx).padStart(2, '0')}`);
       }
     }
@@ -2750,13 +2783,12 @@ export default function App() {
     // 5. If still null, create next page
     if (!spot) {
       const newPage = makeMemoryPage();
-      const newPages = [...pages, newPage];
-      setPages(newPages);
+      setPages(all => [...all, newPage]);
       targetPage = newPage;
       chosenW = baseW;
       chosenH = baseH;
       spot = { x: 84, y: 260 };
-      const pageIdx = newPages.length;
+      const pageIdx = pagesRef.current.length;
       showToast(`Spread is full — added to page ${String(pageIdx).padStart(2, '0')}`);
     }
 
@@ -2793,8 +2825,7 @@ export default function App() {
         data: { placement: 'free' },
       }, mediaId);
 
-      const updatedBlocks = [...(targetPage.blocks || []), newBlock];
-      updatePage(targetPage.id, { blocks: updatedBlocks });
+      updatePage(targetPage.id, page => ({ blocks: [...(page.blocks || []), newBlock] }));
 
       setSelectedBlock(newBlock.id);
       setTimeout(() => {
@@ -2815,7 +2846,8 @@ export default function App() {
     if (kind === 'video') warnForLargeVideo(file);
     try {
       const mediaId = await saveMedia(file, kind);
-      const ownerPage = pages.find((page) => page.blocks?.some((block) => block.id === blockId));
+      const latestPages = pagesRef.current;
+      const ownerPage = latestPages.find((page) => page.blocks?.some((block) => block.id === blockId));
       const previousBlock = ownerPage?.blocks?.find((block) => block.id === blockId);
       if (!ownerPage || !previousBlock) throw new Error('Could not find the media block being replaced.');
       const previousIds = [
@@ -2825,7 +2857,7 @@ export default function App() {
         previousBlock.data?.imageAssetId, previousBlock.data?.videoAssetId,
         previousBlock.data?.audioAssetId,
       ].filter(Boolean);
-      const updatedPages = pages.map((page) => page.id === ownerPage.id ? {
+      const updatedPages = latestPages.map((page) => page.id === ownerPage.id ? {
         ...page,
         blocks: (page.blocks || []).map((block) => block.id === blockId
           ? blockWithMediaId(block, mediaId)
@@ -2855,10 +2887,9 @@ export default function App() {
   const handleFormatActivePage = () => {
     const targetId = activePageId || current?.id;
     if (!targetId) return;
-    const target = pages.find((p) => p.id === targetId);
+    const target = pagesRef.current.find((p) => p.id === targetId);
     if (!target) return;
-    const formatted = autoFormatPageBlocks(target.blocks || []);
-    updatePage(targetId, { blocks: formatted });
+    updatePage(targetId, page => ({ blocks: autoFormatPageBlocks(page.blocks || []) }));
     showToast('Page layout formatted');
   };
 
@@ -2994,10 +3025,9 @@ export default function App() {
 
   const appendMemory = () => {
     setEditor(null);
-    const memory = makeMemoryPage(pages.length - 4);
-    const nextPages = [...pages, memory];
-    setPages(nextPages);
-    setActiveIndex(nextPages.length - 1);
+    const memory = makeMemoryPage(pagesRef.current.length - 4);
+    setPages(all => [...all, memory]);
+    setActiveIndex(pagesRef.current.length - 1);
     setOpened(true);
     setActionsOpen(false);
   };
@@ -3020,10 +3050,13 @@ export default function App() {
 
   const deletePage = () => {
     if (!current || !window.confirm("Delete this page from your diary?")) return;
+    const latestPages = pagesRef.current;
+    const pageToDelete = latestPages.find(page => page.id === current.id);
+    if (!pageToDelete) return;
     const mediaIds = [
-      current.fields?.photoAssetId,
-      current.data?.profilePhoto?.mediaId,
-      ...(current.blocks || []).flatMap((block) => [
+      pageToDelete.fields?.photoAssetId,
+      pageToDelete.data?.profilePhoto?.mediaId,
+      ...(pageToDelete.blocks || []).flatMap((block) => [
         block.mediaId, block.assetId, block.imageAssetId, block.videoAssetId, block.audioAssetId,
         block.posterMediaId, block.posterAssetId, block.posterId, block.posterImageAssetId,
         block.posterVideoAssetId,
@@ -3034,8 +3067,8 @@ export default function App() {
         block.data?.posterImageAssetId, block.data?.posterVideoAssetId,
       ]),
     ].filter(Boolean);
-    for (const key of videoTextureSources.keys()) if (key.startsWith(`${current.id}:`)) { videoTextureSources.get(key)?.video.pause(); videoTextureSources.delete(key); }
-    const updatedPages = pages.filter(page => page.id !== current.id);
+    for (const key of videoTextureSources.keys()) if (key.startsWith(`${pageToDelete.id}:`)) { videoTextureSources.get(key)?.video.pause(); videoTextureSources.delete(key); }
+    const updatedPages = latestPages.filter(page => page.id !== pageToDelete.id);
     setPages(updatedPages);
     mediaIds.forEach((id) => deleteMediaIfUnused(id, updatedPages).catch(console.error));
     setActiveIndex(Math.max(0, activeIndex - 1)); setEditor(null); setActionsOpen(false);

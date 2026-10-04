@@ -1,33 +1,46 @@
 {
+  "schemaVersion": "1.0.0",
   "version": 1,
-  "exportedAt": "2026-10-03T17:33:59.323Z",
+  "exportedAt": "2026-10-04T11:56:20.125Z",
   "pages": [
     {
       "id": "ownership",
       "kind": "ownership",
       "title": "This Diary Belongs To",
       "fields": {
-        "name": "ABHAY GUPTA",
+        "name": "Eleanor Vance",
         "introduction": "",
         "photo": ""
       },
-      "revision": 33,
+      "revision": 26,
       "data": {
         "profilePhoto": {
           "focusX": 50,
           "focusY": 50,
           "zoom": 1,
-          "src": "/diary/media/104abb6aff924cc9.jpeg"
+          "src": "/diary/media/a624febb3418ae9a.jpeg"
         }
       },
-      "blocks": []
+      "blocks": [
+        {
+          "id": "0670f72d-57c1-4508-954d-98c10df2956b",
+          "type": "text",
+          "x": 132,
+          "y": 132,
+          "width": 604,
+          "height": 110,
+          "text": "",
+          "fontSize": 24,
+          "style": "body"
+        }
+      ]
     },
     {
       "id": "profile",
       "kind": "profile",
       "title": "My Profile",
       "fields": {
-        "name": "ABHAY GUPTA ",
+        "name": "",
         "nickname": "",
         "birthday": "",
         "flower": "",
@@ -38,7 +51,6 @@
         "happy": "",
         "other": ""
       },
-      "revision": 26,
       "blocks": []
     },
     {
@@ -55,219 +67,7 @@
       "blocks": []
     },
     {
-      "id": "memory-ee45f0b7-c64f-4922-a6b1-3defa763cbc4-6626",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-02",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-ee45f0b7-c64f-4922-a6b1-3defa763cbc4-6626",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "does it is on render\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">does it is on render</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p></p><p></p><p></p>"
-        },
-        {
-          "id": "c23cf592-a580-4e0b-a826-ce2a3a95c023",
-          "type": "photo",
-          "x": 416,
-          "y": 134,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": -2.5,
-          "caption": "",
-          "z": 14,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        },
-        {
-          "id": "d816bff9-b28b-48c4-a2dc-66b651893ceb",
-          "type": "photo",
-          "x": 134,
-          "y": 132,
-          "w": 240,
-          "h": 380,
-          "width": 240,
-          "height": 380,
-          "rotation": -2.5,
-          "caption": "",
-          "z": 15,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/104abb6aff924cc9.jpeg"
-          }
-        },
-        {
-          "id": "18d3ed75-900a-4e44-a775-93b82d39e03b",
-          "type": "photo",
-          "x": 416,
-          "y": 341,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": -2.6,
-          "caption": "",
-          "z": 16,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/795a9449672a57a1.png"
-          }
-        },
-        {
-          "x": 64,
-          "y": 794,
-          "w": 320,
-          "h": 180,
-          "rotation": -1.1,
-          "width": 320,
-          "height": 180,
-          "id": "868c0404-ace6-4011-9f87-2f90d1a56a7f",
-          "z": 12
-        },
-        {
-          "id": "33204ddc-b89b-4e1b-81b1-e732dfde0a32",
-          "type": "photo",
-          "x": 64,
-          "y": 532,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": 2.4,
-          "caption": "",
-          "z": 17,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        }
-      ],
-      "revision": 94
-    },
-    {
-      "id": "memory-4300da81-98e3-462d-8bfc-9db10ebfaeb5-912",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-02",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-4300da81-98e3-462d-8bfc-9db10ebfaeb5-912",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
-        },
-        {
-          "id": "ca2e6f88-6841-4098-a9db-208a83afb269",
-          "type": "photo",
-          "x": 401,
-          "y": 166,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": -2.2,
-          "caption": "",
-          "z": 3,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        },
-        {
-          "id": "0ad99d75-86d3-42f1-a802-7c2fa6eaa067",
-          "type": "photo",
-          "x": 64,
-          "y": 171,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": 1.6,
-          "caption": "",
-          "z": 5,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        },
-        {
-          "id": "d905d47f-26a0-446a-98da-70f24ff2d834",
-          "type": "photo",
-          "x": 416,
-          "y": 372,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": 2.8,
-          "caption": "",
-          "z": 6,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        },
-        {
-          "id": "57368c25-91f1-4df7-8022-b9feeefac2fd",
-          "type": "photo",
-          "x": 64,
-          "y": 372,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": 1.8,
-          "caption": "",
-          "z": 7,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        },
-        {
-          "id": "974d54c6-db21-4ad5-874c-17e5c7c31f10",
-          "type": "photo",
-          "x": 416,
-          "y": 572,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": 1.7,
-          "caption": "",
-          "z": 8,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
-        }
-      ],
-      "revision": 37
-    },
-    {
-      "id": "memory-e79ea9a0-93e8-4b02-8300-53ad6c6e8bb8-4499",
+      "id": "memory-8be388b4-2a24-42af-9e1a-e0e0e386228c",
       "kind": "memory",
       "title": "",
       "date": "2026-10-02",
@@ -275,31 +75,37 @@
       "variation": 3,
       "blocks": [
         {
-          "id": "main-memory-e79ea9a0-93e8-4b02-8300-53ad6c6e8bb8-4499",
+          "id": "77578970-e6b5-4ec7-aa16-aa1dd402a955",
           "type": "text",
-          "mainText": true,
+          "text": "hllow i am abhay gupta\n\nThis is a test entry on Page 5.\n\nToday the petals drifted gently, g Adding more edits live!athering by the window.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
           "x": 64,
           "y": 132,
           "top": 132,
           "width": 672,
           "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+          "style": "body",
+          "fontSize": 19,
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "align": "left",
+          "lineSpacing": 1.55,
+          "mainText": true,
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">hllow i am abhay gupta</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">This is a test entry on Page 5.</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">Today the petals drifted gently, g Adding more edits live!athering by the window.</p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p><p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
         }
       ],
-      "revision": 6
+      "revision": 314
     },
     {
-      "id": "memory-3a02d66e-66bc-4b4b-8011-a0012a7c315c-9340",
+      "id": "memory-79719566-4c70-4b81-952d-6bc4f7772378",
       "kind": "memory",
-      "title": "",
+      "title": "My First Memory",
       "date": "2026-10-02",
       "mood": "",
       "variation": 4,
       "blocks": [
         {
-          "id": "main-memory-3a02d66e-66bc-4b4b-8011-a0012a7c315c-9340",
+          "id": "main-memory-79719566-4c70-4b81-952d-6bc4f7772378",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -308,14 +114,31 @@
           "width": 672,
           "height": 880,
           "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
+          "text": "\n\n\n\n\n\n\n\n\n\n\n\n",
+          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
+        },
+        {
+          "id": "365dcb46-996a-455e-82be-25452ee886fc",
+          "type": "photo",
+          "x": 496,
+          "y": 132,
+          "w": 240,
+          "h": 380,
+          "width": 240,
+          "height": 380,
+          "rotation": -1.7,
+          "caption": "",
+          "z": 2,
+          "data": {
+            "placement": "free",
+            "src": "/diary/media/2709c6e053de1ba0.jpeg"
+          }
         }
       ],
-      "revision": 18
+      "revision": 39
     },
     {
-      "id": "memory-9861730f-045c-4784-a1b6-1540a663303f-5602",
+      "id": "memory-e186be35-a9e4-4b22-893e-cfb39fb2b324",
       "kind": "memory",
       "title": "",
       "date": "2026-10-02",
@@ -323,7 +146,37 @@
       "variation": 0,
       "blocks": [
         {
-          "id": "main-memory-9861730f-045c-4784-a1b6-1540a663303f-5602",
+          "id": "03200ead-19a1-4ff0-be52-d1786b86c490",
+          "type": "text",
+          "text": "This afternoon by the cherry blos - edited live test!soms was pure magic.",
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "style": "body",
+          "fontSize": 19,
+          "bold": false,
+          "italic": false,
+          "underline": false,
+          "align": "left",
+          "lineSpacing": 1.55,
+          "mainText": true,
+          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\">This afternoon by the cherry blos - edited live test!soms was pure magic.</p>"
+        }
+      ],
+      "revision": 86
+    },
+    {
+      "id": "memory-195ba8d8-2a1a-47de-9901-9c8a4e04d74c-5980",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-02",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-195ba8d8-2a1a-47de-9901-9c8a4e04d74c-5980",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -339,79 +192,7 @@
       "revision": 8
     },
     {
-      "id": "memory-e868a7ab-d6d4-439c-9f05-fd88066434d0-1852",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-e868a7ab-d6d4-439c-9f05-fd88066434d0-1852",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-          "html": "<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>"
-        }
-      ],
-      "revision": 5
-    },
-    {
-      "id": "memory-06704578-8c2a-4931-ba23-8fd0915375db-4539",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 2,
-      "blocks": [
-        {
-          "id": "main-memory-06704578-8c2a-4931-ba23-8fd0915375db-4539",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
-        }
-      ],
-      "revision": 4
-    },
-    {
-      "id": "memory-19da3a2b-180f-4b8b-8a68-6b9407186f5a-2121",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 3,
-      "blocks": [
-        {
-          "id": "main-memory-19da3a2b-180f-4b8b-8a68-6b9407186f5a-2121",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
-        }
-      ],
-      "revision": 4
-    },
-    {
-      "id": "memory-9243b85a-55db-4bac-a08a-071afee5517c-4615",
+      "id": "memory-f600ce2f-b07b-4cbf-b888-1efd6c21b1ca-3397",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
@@ -419,7 +200,7 @@
       "variation": 4,
       "blocks": [
         {
-          "id": "main-memory-9243b85a-55db-4bac-a08a-071afee5517c-4615",
+          "id": "main-memory-f600ce2f-b07b-4cbf-b888-1efd6c21b1ca-3397",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -432,10 +213,10 @@
           "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
         }
       ],
-      "revision": 4
+      "revision": 2
     },
     {
-      "id": "memory-7f5fd2de-8b10-4b96-b943-c922b5440243-8768",
+      "id": "memory-b818e723-d74b-459e-9ff8-874c221e4366-6776",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
@@ -443,7 +224,7 @@
       "variation": 0,
       "blocks": [
         {
-          "id": "main-memory-7f5fd2de-8b10-4b96-b943-c922b5440243-8768",
+          "id": "main-memory-b818e723-d74b-459e-9ff8-874c221e4366-6776",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -459,7 +240,7 @@
       "revision": 2
     },
     {
-      "id": "memory-8dc1a68c-dbce-471b-9d17-429c5cd43f35-9141",
+      "id": "memory-f9fba42b-f611-4d61-ab07-dc0dd4dfd13a-479",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
@@ -467,31 +248,7 @@
       "variation": 1,
       "blocks": [
         {
-          "id": "main-memory-8dc1a68c-dbce-471b-9d17-429c5cd43f35-9141",
-          "type": "text",
-          "mainText": true,
-          "x": 64,
-          "y": 132,
-          "top": 132,
-          "width": 672,
-          "height": 880,
-          "fontSize": 26,
-          "text": "",
-          "html": "<p data-size=\"normal\" style=\"font-size: 26px; line-height: 40px;\"></p>"
-        }
-      ],
-      "revision": 2
-    },
-    {
-      "id": "memory-e79f94ad-9455-4bd7-afda-471685ee7933-7613",
-      "kind": "memory",
-      "title": "",
-      "date": "2026-10-03",
-      "mood": "",
-      "variation": 1,
-      "blocks": [
-        {
-          "id": "main-memory-e79f94ad-9455-4bd7-afda-471685ee7933-7613",
+          "id": "main-memory-f9fba42b-f611-4d61-ab07-dc0dd4dfd13a-479",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -502,37 +259,19 @@
           "fontSize": 26,
           "text": "",
           "html": "<p></p>"
-        },
-        {
-          "id": "dc9a9a54-15e5-44b5-a263-6da31419006d",
-          "type": "photo",
-          "x": 84,
-          "y": 260,
-          "w": 320,
-          "h": 320,
-          "width": 320,
-          "height": 320,
-          "rotation": -0.4,
-          "caption": "",
-          "z": 2,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/60d2a4cbb794677e.png"
-          }
         }
-      ],
-      "revision": 1
+      ]
     },
     {
-      "id": "memory-2a454006-6d8f-4327-9839-59a3a9b2fb12-2231",
+      "id": "memory-65af6090-ac84-47d3-8a53-4f07bb802529-1364",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
       "mood": "",
-      "variation": 1,
+      "variation": 2,
       "blocks": [
         {
-          "id": "main-memory-2a454006-6d8f-4327-9839-59a3a9b2fb12-2231",
+          "id": "main-memory-65af6090-ac84-47d3-8a53-4f07bb802529-1364",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -543,37 +282,19 @@
           "fontSize": 26,
           "text": "",
           "html": "<p></p>"
-        },
-        {
-          "id": "6014f7d9-b7b3-49ec-a4d0-677f25b0ee73",
-          "type": "photo",
-          "x": 84,
-          "y": 260,
-          "w": 320,
-          "h": 320,
-          "width": 320,
-          "height": 320,
-          "rotation": 2.2,
-          "caption": "",
-          "z": 2,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/05ea3bf4239dda3b.png"
-          }
         }
-      ],
-      "revision": 1
+      ]
     },
     {
-      "id": "memory-e8965fd2-6d9c-47ce-a77f-5034296c87a3-7404",
+      "id": "memory-904dd5c3-f795-43c3-bf94-84d9bbcf1898-1917",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
       "mood": "",
-      "variation": 1,
+      "variation": 3,
       "blocks": [
         {
-          "id": "main-memory-e8965fd2-6d9c-47ce-a77f-5034296c87a3-7404",
+          "id": "main-memory-904dd5c3-f795-43c3-bf94-84d9bbcf1898-1917",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -584,29 +305,11 @@
           "fontSize": 26,
           "text": "",
           "html": "<p></p>"
-        },
-        {
-          "id": "012acc2b-c4db-43b0-8a8b-106f20b2b4a0",
-          "type": "photo",
-          "x": 84,
-          "y": 260,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": -0.1,
-          "caption": "",
-          "z": 2,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/ec9c35eb52d780a0.png"
-          }
         }
-      ],
-      "revision": 1
+      ]
     },
     {
-      "id": "memory-7b87499c-cb46-4605-965a-22baf1e14463-3003",
+      "id": "memory-2f431069-4dfc-486a-9ddd-2cfeab8bce70-7643",
       "kind": "memory",
       "title": "",
       "date": "2026-10-03",
@@ -614,7 +317,7 @@
       "variation": 4,
       "blocks": [
         {
-          "id": "main-memory-7b87499c-cb46-4605-965a-22baf1e14463-3003",
+          "id": "main-memory-2f431069-4dfc-486a-9ddd-2cfeab8bce70-7643",
           "type": "text",
           "mainText": true,
           "x": 64,
@@ -625,43 +328,353 @@
           "fontSize": 26,
           "text": "",
           "html": "<p></p>"
-        },
-        {
-          "id": "4a740358-da9a-4b92-8d34-a7816a84f107",
-          "type": "photo",
-          "x": 84,
-          "y": 260,
-          "w": 320,
-          "h": 180,
-          "width": 320,
-          "height": 180,
-          "rotation": -0.3,
-          "caption": "",
-          "z": 2,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/5264773379b6db1f.png"
-          }
-        },
-        {
-          "id": "3a895465-e184-4d3a-b080-05d2313f2d52",
-          "type": "photo",
-          "x": 416,
-          "y": 132,
-          "w": 320,
-          "h": 320,
-          "width": 320,
-          "height": 320,
-          "rotation": 1.3,
-          "caption": "",
-          "z": 3,
-          "data": {
-            "placement": "free",
-            "src": "/diary/media/60d2a4cbb794677e.png"
-          }
         }
-      ],
-      "revision": 2
+      ]
+    },
+    {
+      "id": "memory-21211531-a3ff-4771-bf36-4478a405c00f-8366",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 0,
+      "blocks": [
+        {
+          "id": "main-memory-21211531-a3ff-4771-bf36-4478a405c00f-8366",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-d0f2dcbd-73a2-40bc-a6ba-59bc99c0daca-7216",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-d0f2dcbd-73a2-40bc-a6ba-59bc99c0daca-7216",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-35854b5b-1ae1-41f3-ab2d-7b2d00eba636-3291",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 2,
+      "blocks": [
+        {
+          "id": "main-memory-35854b5b-1ae1-41f3-ab2d-7b2d00eba636-3291",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-0b33f1e6-2472-4bc7-a73f-edcdf0c01855-257",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-0b33f1e6-2472-4bc7-a73f-edcdf0c01855-257",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-e461447e-526c-41a3-b0c2-a09f68f56076-4544",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-e461447e-526c-41a3-b0c2-a09f68f56076-4544",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-d20f153e-a720-48fc-acb1-d40e21639cbb-8901",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 0,
+      "blocks": [
+        {
+          "id": "main-memory-d20f153e-a720-48fc-acb1-d40e21639cbb-8901",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-66483dd3-97bf-4645-b4c9-318a2523a275-7380",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-66483dd3-97bf-4645-b4c9-318a2523a275-7380",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-133747f9-0b47-453a-8d59-5b7dc301aa90-4989",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 2,
+      "blocks": [
+        {
+          "id": "main-memory-133747f9-0b47-453a-8d59-5b7dc301aa90-4989",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-c6d17df8-0a5d-4c80-8f55-8569c3bfa9e5-1807",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-c6d17df8-0a5d-4c80-8f55-8569c3bfa9e5-1807",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-e92dd8b1-7006-43d2-a80c-ab6c1fc17be2-1780",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-e92dd8b1-7006-43d2-a80c-ab6c1fc17be2-1780",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-51a70c21-f1f5-46af-84fd-624ebb4b5f77-6666",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 0,
+      "blocks": [
+        {
+          "id": "main-memory-51a70c21-f1f5-46af-84fd-624ebb4b5f77-6666",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-b3c954c3-52ce-4a43-a9da-e9dfaa500a28-3887",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 1,
+      "blocks": [
+        {
+          "id": "main-memory-b3c954c3-52ce-4a43-a9da-e9dfaa500a28-3887",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-4f247f3f-9bbd-4d88-8dec-5da35cde24d4-3990",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 2,
+      "blocks": [
+        {
+          "id": "main-memory-4f247f3f-9bbd-4d88-8dec-5da35cde24d4-3990",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-de0858f4-0f3a-4003-8bef-7e6f426ba3aa-687",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 3,
+      "blocks": [
+        {
+          "id": "main-memory-de0858f4-0f3a-4003-8bef-7e6f426ba3aa-687",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
+    },
+    {
+      "id": "memory-be894d24-8876-446d-b163-ed49b845c2b0-9527",
+      "kind": "memory",
+      "title": "",
+      "date": "2026-10-03",
+      "mood": "",
+      "variation": 4,
+      "blocks": [
+        {
+          "id": "main-memory-be894d24-8876-446d-b163-ed49b845c2b0-9527",
+          "type": "text",
+          "mainText": true,
+          "x": 64,
+          "y": 132,
+          "top": 132,
+          "width": 672,
+          "height": 880,
+          "fontSize": 26,
+          "text": "",
+          "html": "<p></p>"
+        }
+      ]
     }
   ],
   "inkColor": "#5a3a31"

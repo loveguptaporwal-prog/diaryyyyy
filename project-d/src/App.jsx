@@ -38,7 +38,7 @@ import {
 } from "./constants/pageLayout";
 import { INK_PALETTE, HIGHLIGHT_PALETTE, INK_THEMES } from "./theme/theme";
 import { SIZES } from "./editor/ParagraphSize";
-import { emptyPublishedPages, exportDiary, loadPublishedDiary } from "./publishing/publishDiary.js";
+import { emptyPublishedPages, exportDiary, importPublishedDiary, loadPublishedDiary } from "./publishing/publishDiary.js";
 import "./index.css";
 import "./App.css";
 
@@ -2157,6 +2157,33 @@ export default function App() {
     }
   };
 
+  const handleLoadPublishedForEditing = async () => {
+    setActionsOpen(false);
+    if (!window.confirm('Load the published diary into this browser? This replaces the current diary pages on this computer. Existing media stored here will not be deleted.')) {
+      return;
+    }
+    setExportStatus('Loading published diary for editing…');
+    try {
+      const published = await importPublishedDiary(setExportStatus);
+      if (!saveDiary(published.pages)) {
+        for (const mediaId of published.importedMediaIds) {
+          await deleteMediaAsset(mediaId);
+        }
+        throw new Error('The published diary was imported, but this browser could not save its pages. Your current diary pages were not replaced.');
+      }
+      setPages(published.pages);
+      if (published.inkColor) setInkColor(published.inkColor);
+      setActiveIndex(0);
+      setEditor(null);
+      setSelectedBlock(null);
+      setMode('read');
+      setExportStatus('Published diary loaded for editing. Existing media stored here was not deleted.');
+    } catch (error) {
+      console.error('Failed to load published diary for editing:', error);
+      setExportStatus(`Import failed: ${error.message}`);
+    }
+  };
+
   const handleReturnToEditing = () => {
     setPreviewPublished(false);
     setActiveIndex(Math.min(previewReturnIndex.current, Math.max(0, pages.length - 1)));
@@ -2992,9 +3019,11 @@ export default function App() {
             </button>
           )}
 
-          <button aria-label="Page options" onClick={() => setActionsOpen(v => !v)}>
-            <MoreHorizontal size={18} strokeWidth={1.75} />
-          </button>
+          {(!isReadOnly || previewPublished) && (
+            <button aria-label="Page options" onClick={() => setActionsOpen(v => !v)}>
+              <MoreHorizontal size={18} strokeWidth={1.75} />
+            </button>
+          )}
           <button aria-label="Next spread" onClick={turnNext}>
             <ChevronRight size={20} strokeWidth={2} />
           </button>
@@ -3041,6 +3070,7 @@ export default function App() {
                   {import.meta.env.DEV && (
                     <>
                       <button onClick={handlePreviewPublished}>Preview published version</button>
+                      <button onClick={handleLoadPublishedForEditing}>Load published version into editor</button>
                       <button onClick={handleExportForPublishing}>Export for publishing</button>
                     </>
                   )}

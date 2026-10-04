@@ -8,12 +8,13 @@
    - In Chrome or Edge, choose the project's `public` folder (not the project root or `src/publishing`) the first time. The export creates or updates `public/diary/` and remembers the folder for later exports.
    - In other browsers, download `diary-publish.zip` and extract its `diary` folder into `project-d/public/`.
    - Files over 50 MB are listed. Any individual media file over 95 MB stops the export; reduce or remove that file before trying again.
-3. Commit and push the exported diary:
+3. On another computer or localhost origin, receive the project files and open the app in development. Choose **Load published version into editor** from the `⋯` menu to copy the published pages and media into that browser's editable diary. Confirm the prompt first: the current diary pages on that computer will be replaced, but existing media records will not be deleted.
+4. Commit and push the exported diary:
 
    ```sh
    git add . && git commit -m "Update diary" && git push
    ```
 
-4. Configure Render as a **Static Site** with build command `npm install && npm run build` and publish directory `dist`. Render redeploys automatically after a push.
+5. Configure Render as a **Static Site** with build command `npm install && npm run build` and publish directory `dist`. Render redeploys automatically after a push.
 
 Vite copies `public/diary/` into `dist/diary/` during `npm run build`. The deployed site fetches that published diary and media directly and is read-only. In development, use **Preview published version** in the `⋯` menu to check the exported diary before publishing.

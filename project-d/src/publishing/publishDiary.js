@@ -116,7 +116,7 @@ async function prepareMedia(pages, onProgress) {
 function publishedPages(pages, mediaById) {
   const publicPath = (id) => {
     const media = mediaById.get(id);
-    return media ? `/diary/media/${media.filename}` : null;
+    return media ? `${import.meta.env.BASE_URL}diary/media/${media.filename}` : null;
   };
 
   return pages.map((page) => {
@@ -161,6 +161,134 @@ function publishedPages(pages, mediaById) {
       delete blockCopy.posterAssetId;
       delete blockCopy.posterId;
       delete blockCopy.posterImageAssetId;
+      if (Object.keys(data).length) blockCopy.data = data;
+      return blockCopy;
+    });
+
+    return pageCopy;
+  });
+}
+
+function publishedMediaUrl(path) {
+  if (typeof path !== 'string') return null;
+  let url;
+  let mediaDirectory;
+  try {
+    url = new URL(path, window.location.href);
+    mediaDirectory = new URL(`${import.meta.env.BASE_URL}diary/media/`, window.location.href);
+  } catch {
+    return null;
+  }
+
+  const filename = url.pathname.slice(mediaDirectory.pathname.length);
+  if (
+    url.origin !== mediaDirectory.origin ||
+    url.search ||
+    url.hash ||
+    !url.pathname.startsWith(mediaDirectory.pathname) ||
+    !/^[a-f0-9]{16}\.[a-z0-9]{1,8}$/i.test(filename)
+  ) {
+    return null;
+  }
+  return url;
+}
+
+function collectPublishedMediaPaths(value, paths = new Set()) {
+  if (typeof value === 'string') {
+    if (publishedMediaUrl(value)) paths.add(value);
+  } else if (Array.isArray(value)) {
+    value.forEach((item) => collectPublishedMediaPaths(item, paths));
+  } else if (value && typeof value === 'object') {
+    Object.values(value).forEach((item) => collectPublishedMediaPaths(item, paths));
+  }
+  return paths;
+}
+
+async function importPublishedMedia(pages, onProgress) {
+  const paths = [...collectPublishedMediaPaths(pages)];
+  const mediaIds = new Map();
+  try {
+    for (let index = 0; index < paths.length; index += 1) {
+      const path = paths[index];
+      const url = publishedMediaUrl(path);
+      if (!url) continue;
+      onProgress(`Importing media ${index + 1} of ${paths.length}…`);
+      const response = await fetch(url, { cache: 'no-cache' });
+      if (!response.ok) {
+        throw new Error(`Could not import published media "${url.pathname}" (HTTP ${response.status}).`);
+      }
+      const blob = await response.blob();
+      if (!blob.size) {
+        throw new Error(`Published media "${url.pathname}" is empty.`);
+      }
+      const filename = url.pathname.split('/').pop();
+      const mediaId = `import-${globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${index}`}`;
+      mediaIds.set(path, mediaId);
+      const file = new File([blob], filename, { type: blob.type });
+      await db.media.put(file, mediaId);
+    }
+  } catch (error) {
+    const cleanupErrors = [];
+    for (const mediaId of mediaIds.values()) {
+      try {
+        await db.media.delete(mediaId);
+      } catch (cleanupError) {
+        cleanupErrors.push(cleanupError);
+      }
+    }
+    if (cleanupErrors.length) {
+      throw new Error(`${error.message} Some newly imported media could not be removed after the failed import.`, { cause: error });
+    }
+    throw error;
+  }
+  return { mediaIds, importedMediaIds: [...mediaIds.values()] };
+}
+
+function pagesWithImportedMedia(pages, mediaIds) {
+  const mediaIdFor = (path) => mediaIds.get(path);
+  return pages.map((page) => {
+    const pageCopy = structuredClone(page);
+    const profilePhoto = pageCopy.data?.profilePhoto;
+    const profilePhotoId = mediaIdFor(profilePhoto?.src) || mediaIdFor(pageCopy.fields?.photoSrc);
+    if (profilePhotoId) {
+      pageCopy.data = {
+        ...(pageCopy.data || {}),
+        profilePhoto: {
+          ...(profilePhoto || {}),
+          mediaId: profilePhotoId,
+        },
+      };
+      delete pageCopy.data.profilePhoto.src;
+      if (pageCopy.fields?.photoSrc && mediaIdFor(pageCopy.fields.photoSrc)) {
+        pageCopy.fields = { ...pageCopy.fields, photoAssetId: profilePhotoId };
+        delete pageCopy.fields.photoSrc;
+      }
+    }
+
+    pageCopy.blocks = (pageCopy.blocks || []).map((block) => {
+      const blockCopy = { ...block };
+      const data = { ...(block.data || {}) };
+      const sourcePath = data.src || block.src || block.videoSrc || block.imageSrc || block.url;
+      const sourceId = mediaIdFor(sourcePath);
+      const posterPath = data.posterSrc || block.posterSrc;
+      const posterId = mediaIdFor(posterPath);
+
+      if (sourceId) {
+        blockCopy.mediaId = sourceId;
+        data.mediaId = sourceId;
+        if (block.type === 'photo') blockCopy.imageAssetId = sourceId;
+        if (block.type === 'video') blockCopy.assetId = sourceId;
+        if (mediaIdFor(data.src)) delete data.src;
+        for (const key of ['src', 'videoSrc', 'imageSrc', 'url']) {
+          if (mediaIdFor(blockCopy[key])) delete blockCopy[key];
+        }
+      }
+      if (posterId) {
+        blockCopy.posterMediaId = posterId;
+        data.posterMediaId = posterId;
+        if (mediaIdFor(data.posterSrc)) delete data.posterSrc;
+        if (mediaIdFor(blockCopy.posterSrc)) delete blockCopy.posterSrc;
+      }
       if (Object.keys(data).length) blockCopy.data = data;
       return blockCopy;
     });
@@ -247,6 +375,14 @@ async function downloadZip(files, mediaRecords) {
 }
 
 export async function loadPublishedDiary() {
+  const document = await fetchPublishedDocument();
+  return {
+    pages: document.pages,
+    inkColor: typeof document.inkColor === 'string' ? document.inkColor : null,
+  };
+}
+
+async function fetchPublishedDocument() {
   const response = await fetch(`${import.meta.env.BASE_URL}diary/diary.json`, { cache: 'no-cache' });
   if (!response.ok) {
     throw new Error(response.status === 404
@@ -257,9 +393,16 @@ export async function loadPublishedDiary() {
   if (!Array.isArray(document.pages)) {
     throw new Error('The published diary file is invalid: it must contain a pages array.');
   }
+  return document;
+}
+
+export async function importPublishedDiary(onProgress) {
+  const document = await fetchPublishedDocument();
+  const { mediaIds, importedMediaIds } = await importPublishedMedia(document.pages, onProgress);
   return {
-    pages: document.pages,
+    pages: pagesWithImportedMedia(document.pages, mediaIds),
     inkColor: typeof document.inkColor === 'string' ? document.inkColor : null,
+    importedMediaIds,
   };
 }
 
@@ -273,6 +416,7 @@ export async function exportDiary(pages, inkColor, onProgress) {
   const { records, mediaById, largeFiles } = await prepareMedia(pages, onProgress);
   if (largeFiles.length) onProgress(`Large media over 50 MB: ${largeFiles.join(', ')}`);
   const document = {
+    schemaVersion: '1.0.0',
     version: 1,
     exportedAt: new Date().toISOString(),
     pages: publishedPages(pages, mediaById),

@@ -29,6 +29,9 @@ export default function VideoBlock({
   const mediaId = block.data?.mediaId || block.mediaId || block.assetId;
   const directUrl = block.data?.src || block.videoSrc || block.url;
   const { url: mediaUrl, error, loading } = useMediaUrl(mediaId, directUrl);
+  const posterMediaId = block.data?.posterMediaId || block.posterMediaId;
+  const posterDirectUrl = block.data?.posterSrc || block.posterSrc;
+  const { url: posterMediaUrl } = useMediaUrl(posterMediaId, posterDirectUrl);
   const displayUrl = directUrl || mediaUrl;
 
   const videoRef = useRef(null);
@@ -71,7 +74,7 @@ export default function VideoBlock({
                 playsInline
                 preload="metadata"
                 loop
-                poster={block.data?.posterSrc || block.posterSrc}
+                poster={posterDirectUrl || posterMediaUrl}
                 onLoadedMetadata={(e) => {
                   try {
                     if (e.target.currentTime === 0) e.target.currentTime = 0.1;

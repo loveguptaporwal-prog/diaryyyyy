@@ -141,7 +141,12 @@ export function loadDiary() {
 }
 
 export function saveDiary(pages) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(pages)); } catch { /* Keep the in-memory diary usable. */ }
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 import { db } from './db/db.js';
